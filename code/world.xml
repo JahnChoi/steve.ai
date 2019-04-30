@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <About>
+    <Summary>Project World</Summary>
+  </About>
+
+  <ServerSection>
+    <ServerInitialConditions>
+        <Time>
+            <StartTime>20000</StartTime>
+            <AllowPassageOfTime>false</AllowPassageOfTime>
+        </Time>
+        <Weather>clear</Weather>
+    </ServerInitialCondition>
+    <ServerHandlers>
+      <FlatWorldGenerator generatorString="3;7,20*89;1;"/>
+      <DrawingDecorator>
+
+      </DrawingDecorator>
+      <ServerQuitFromTimeUp timeLimitMs="30000"/>
+      <ServerQuitWhenAnyAgentFinishes/>
+    </ServerHandlers>
+  </ServerSection>
+
+  <AgentSection mode="Survival">
+    <Name>175Project</Name>
+    <AgentStart>
+        <Placement x="0" y="56" z="0" yaw="90"/>
+    </AgentStart>
+    <AgentHandlers>
+      <ObservationFromFullStats/>
+      <ContinuousMovementCommands turnSpeedDegs="180"/>
+    </AgentHandlers>
+  </AgentSection>
+</Mission>
