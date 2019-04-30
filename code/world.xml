@@ -15,9 +15,6 @@
     </ServerInitialCondition>
     <ServerHandlers>
       <FlatWorldGenerator generatorString="3;7,20*89;1;"/>
-      <DrawingDecorator>
-
-      </DrawingDecorator>
       <ServerQuitFromTimeUp timeLimitMs="30000"/>
       <ServerQuitWhenAnyAgentFinishes/>
     </ServerHandlers>
@@ -26,7 +23,7 @@
   <AgentSection mode="Survival">
     <Name>175Project</Name>
     <AgentStart>
-        <Placement x="0" y="56" z="0" yaw="90"/>
+        <Placement x="0" y="22" z="0" yaw="90"/>
     </AgentStart>
     <AgentHandlers>
       <ObservationFromFullStats/>
