@@ -6,7 +6,7 @@ title:  Proposal
 
 **Summary**:
 
-We plan to train an agent that will be proficient in combat against the in-game Mobs from Minecraft. Our agent will begin inside a consistent fighting ring equipped with a bow and quiver as well as a sword. After a successful attempt, our agent will then be transferred to another prebuilt arena with a different type or group of mobs. The agent will be trained to effectively combat against singular Mobs at first and then progress to groups. The agent will consume the location and type of local mobs, as well as its own position and surroundings. It will also consider the types of weapons in it’s arsenal. The agent will produce a set of actions to combat the mobs. These could include shooting, striking, walking, running, parrying, and jumping.
+We plan to train an agent that will be proficient in combat against the in-game Mobs from Minecraft. Our agent will spawn on an infinite plane equipped with a sword. After a successful attempt, our agent will then be transferred to another infinite world with a fresh Mob to kill. The agent will be trained to effectively combat against singular Mobs at first and then progress to groups. The agent will consume its location and location/type of local Mobs. It will also consider the type of weapon in its arsenal and delta time since last enemy attack. The agent will produce a set of actions to combat the Mobs. These could include striking, walking, running, parrying, and jumping. It's reward structure will involve positive reward for killing enemies and negative reward for passage of time and death.
 
 **AI/ML Algorithms**:
 
@@ -14,9 +14,9 @@ We plan to use a form of Q-Learning. We will implement our Q-Learning approach u
 
 **Evaluation**:
 
-We will evaluate the success of our agent using the function (number of mobs killed / time taken for all kills) as well as whether our agent survives the encounter. This will ensure our agent will be killing enemy mobs with maximum efficiency and survive any encounter. As a baseline, we will personally attempt fights with in game Mobs and measure our efficiency in comparison to the agent. Each state and action that our agent encounters/produces will be logged for debugging and model improvement purposes. We hope our agent will be at least 25% more efficient than our attempts.
+We will evaluate the success of our agent using the function (number of Mobs killed / time taken for all kills) as well as whether our agent survives the encounter. This will ensure our agent will be killing Mobs with maximum efficiency. As a baseline, we will personally attempt fights with in game Mobs and measure our efficiency in comparison to the agent. We hope our agent will be at least 25% more efficient than our attempts.
 
-The sanity cases our agent will be subjected to include its ability to neutralize single Mobs within a reasonable timeframe. We will graph the evaluation function over time/generations of our model to verify our model’s fighting capabilities. We will also attempt to map out a live graph of our agent within the arena while it fights different types of mobs to fully analyze its capabilities. Our moonshot will be an agent that is 200% as effective as our human combat skills. Or, perhaps an agent that cannot be defeated by any reasonable number of Mobs.
+The sanity cases our agent will be subjected to include its ability to neutralize single Mobs within a reasonable timeframe. We will graph the evaluation function over time/generations of our model to verify that our model is improving its abilities. Our moonshot will be an agent that is capable of adapting to fight any mob type in Minecraft with high efficiency and multiple strategic options.
 
 **Appointment**:
 
