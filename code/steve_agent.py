@@ -5,6 +5,5 @@ class Steve(object):
 		self.eps = 0.2
 		self.q_table = {}
 		self.alpha = alpha
-		self.gamam = gamma 
+		self.gamma = gamma
 		self.n = n
-	
