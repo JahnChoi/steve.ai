@@ -1,5 +1,3 @@
-# steve.ai
-
 ![](https://i.ytimg.com/vi/HPmKuYXQrtQ/maxresdefault.jpg)
 
 Source code repo: https://github.com/JahnChoi/JahnChoi.github.io/Steve-AI
