@@ -1,5 +1,9 @@
-from Malmo import MalmoPython
 import math
+
+try:
+    from malmo import MalmoPython
+except:
+    import MalmoPython
 
 class Steve(object):
 	def __init__(self, alpha = 0.3, gamma = 1, n = 1):
