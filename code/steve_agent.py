@@ -50,10 +50,10 @@ class Steve(object):
 		"""gets the locations of all the entities in world state"""
 		entities = {}
 		for ent in ob["entities"]:
-			name = ent['name']
-			if (name == "175Project"):
+			if (ent["name"] == "175Project"):
 				continue
-			entities[name] = (ent['x'], ent['y'], ent['z'])
+			mob_id = ent['id']
+			entities[mob_id] = (ent['x'], ent['y'], ent['z'])
 		return entities
 
 	def closest_enemy(self, agent, entities):
