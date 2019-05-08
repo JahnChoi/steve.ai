@@ -14,7 +14,7 @@ class Steve(object):
 		self.gamam = gamma 
 		self.n = n
 
-	def lock_on(agest_host, ob, target_pitch, target_yaw, threshhold):
+	def lock_on(self, agest_host, ob, target_pitch, target_yaw, threshhold):
 		pitch = ob.get(u'Pitch', 0)
 		yaw = ob.get(u'Yaw', 0)
 		delta_yaw = angvel(target_yaw, yaw, 50.0)
@@ -27,7 +27,7 @@ class Steve(object):
 			return True
 		return False
 
-	def angvel(target, current, scale):
+	def angvel(self, target, current, scale):
 		delta = target - current
 		while delta < -180:
 			delta += 360
@@ -35,7 +35,7 @@ class Steve(object):
 			delta -= 360
 		return (old_div(2.0, (1.0 + math.exp(old_div(-delta,scale))))) - 1.0
 
-	def calcYawAndPitchToMob(target, x, y, z, target_height):
+	def calcYawAndPitchToMob(self, target, x, y, z, target_height):
 		dx = target.x - x
 		dz = target.z - z
 		yaw = -180 * math.atan2(dx, dz) / math.pi
@@ -43,7 +43,7 @@ class Steve(object):
 		pitch = math.atan2(((y + 1.625) - (target.y + target_height * 0.9)), distance) * 180.0/math.pi
 		return yaw, pitch
 
-	def get_mob_loc(ob):
+	def get_mob_loc(self, ob):
 		"""gets the locations of all the entities in world state"""
 		entities = {}
 		for ent in ob['entities']:
@@ -63,7 +63,7 @@ class Steve(object):
 				dist = new_dist
 		return entities[mob_name]
 
-	def calculate_distance(agent, mob):
+	def calculate_distance(self, agent, mob):
 		"""Takes the agent and mob's location and calculates distance"""
 		return math.sqrt((agent[0] - mob[0])**2 + (agent[2] - mob[2])**2)
 
