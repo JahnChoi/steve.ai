@@ -1,6 +1,5 @@
 import math
 from past.utils import old_div
-import json
 
 try:
     from malmo import MalmoPython

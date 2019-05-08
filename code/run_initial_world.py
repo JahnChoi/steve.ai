@@ -6,6 +6,7 @@ try:
 except:
     import MalmoPython
 import steve_agent
+import json
 
 
 # Create default Malmo objects:
@@ -67,7 +68,7 @@ while world_state.is_mission_running:
     if world_state.number_of_observations_since_last_state > 0:
         msg = world_state.observations[-1].text
         ob = json.loads(msg)
-        steve = Steve()
+        steve = steve_agent.Steve()
         #all entity_info in a tuple (x, y, z)
         agent_info = (ob.get(u'Xpos', 0), ob.get(u'Ypos', 0), ob.get(u'Zpos', 0)) 
         entities = steve.get_mob_loc(ob) 
