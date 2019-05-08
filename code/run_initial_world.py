@@ -64,7 +64,7 @@ while world_state.is_mission_running:
     for error in world_state.errors:
         print("Error:",error.text)
 
-    if world_state.number_of_obserations_since_last_state > 0:
+    if world_state.number_of_observations_since_last_state > 0:
         msg = world_state.observations[-1].text
         ob = json.loads(msg)
         steve = Steve()
