@@ -14,17 +14,20 @@ class Steve(object):
 		self.gamam = gamma 
 		self.n = n
 
-	def lock_on(self, agest_host, ob, target_pitch, target_yaw, threshhold):
+	def lock_on(self, agent_host, ob, target_pitch, target_yaw, threshhold):
 		pitch = ob.get(u'Pitch', 0)
 		yaw = ob.get(u'Yaw', 0)
-		delta_yaw = angvel(target_yaw, yaw, 50.0)
-		delta_pitch = angvel(target_pitch, pitch, 50.0)
+		delta_yaw = self.angvel(target_yaw, yaw, 50.0)
+		delta_pitch = self.angvel(target_pitch, pitch, 50.0)
 		agent_host.sendCommand("turn " + str(delta_yaw))
 		agent_host.sendCommand("pitch " + str(delta_pitch))
-		if abs(pitch-target_pitch) + abs(yaw-target-yaw) < threshhold:
+		"""
+		if abs(pitch-target_pitch) + abs(yaw-target_yaw) < threshhold:
+			print("TRIGGERED")
 			agent_host.sendCommand("turn 0")
 			agent_host.sendCommand("pitch 0")
 			return True
+		"""
 		return False
 
 	def angvel(self, target, current, scale):
@@ -35,29 +38,29 @@ class Steve(object):
 			delta -= 360
 		return (old_div(2.0, (1.0 + math.exp(old_div(-delta,scale))))) - 1.0
 
-	def calcYawAndPitchToMob(self, target, x, y, z, target_height):
-		dx = target.x - x
-		dz = target.z - z
+	def calcYawAndPitchToMob(self, target, x, y, z, target_height): 
+		dx = target[0] - x
+		dz = target[2] - z
 		yaw = -180 * math.atan2(dx, dz) / math.pi
 		distance = math.sqrt(dx * dx + dz * dz)
-		pitch = math.atan2(((y + 1.625) - (target.y + target_height * 0.9)), distance) * 180.0/math.pi
+		pitch = math.atan2(((y + 1.625) - (target[1] + target_height * 0.9)), distance) * 180.0 / math.pi
 		return yaw, pitch
 
 	def get_mob_loc(self, ob):
 		"""gets the locations of all the entities in world state"""
 		entities = {}
-		for ent in ob['entities']:
+		for ent in ob["entities"]:
 			name = ent['name']
+			if (name == "175Project"):
+				continue
 			entities[name] = (ent['x'], ent['y'], ent['z'])
 		return entities
 
 	def closest_enemy(self, agent, entities):
-		mob_name = 'Steve'
+		mob_name = ""
 		dist = 10000
 		for mobs in entities.keys():
-			if (mobs == 'Steve'):
-				continue
-			new_dist = calculate_distance(agent, entities[mobs])
+			new_dist = self.calculate_distance(agent, entities[mobs])
 			if (dist > new_dist):
 				mob_name = mobs
 				dist = new_dist

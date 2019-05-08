@@ -70,12 +70,12 @@ while world_state.is_mission_running:
         ob = json.loads(msg)
         steve = steve_agent.Steve()
         #all entity_info in a tuple (x, y, z)
-        agent_info = (ob.get(u'Xpos', 0), ob.get(u'Ypos', 0), ob.get(u'Zpos', 0)) 
+        agent_info = (ob.get(u'XPos', 0), ob.get(u'YPos', 0), ob.get(u'ZPos', 0)) 
         entities = steve.get_mob_loc(ob) 
         target = steve.closest_enemy(agent_info, entities)
         #zombie mob height is 1.9 LMAO 
-        target_yaw, target_pitch = steve.calcYawAndPitchToMob(target, agent[0], agent[1], agent[2], 1.9) 
-        pointing = steve.lock_on(agent_host, ob, target_pitch, target_yaw, 0.5)
+        target_yaw, target_pitch = steve.calcYawAndPitchToMob(target, agent_info[0], agent_info[1], agent_info[2], 1.9) 
+        pointing = steve.lock_on(agent_host, ob, target_pitch, target_yaw, 5)
 
 print()
 print("Mission ended")
