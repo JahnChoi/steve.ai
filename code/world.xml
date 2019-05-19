@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-  <About>
-    <Summary>Steve.AI</Summary>
-  </About>
+    <About>
+        <Summary>Steve.AI</Summary>
+    </About>
 
-  <ServerSection>
-    <ServerInitialConditions>
-        <Time>
-            <StartTime>20000</StartTime>
-            <AllowPassageOfTime>false</AllowPassageOfTime>
-        </Time>
-        <Weather>clear</Weather>
-        <AllowSpawning>true</AllowSpawning>
-        <AllowedMobs>Zombie</AllowedMobs>
-    </ServerInitialCondition>
-    <ServerHandlers>
-      <FlatWorldGenerator generatorString="3;7,20*89;1;"/>
-      <DrawingDecorator>
-        <DrawEntity x="-25.0" y="21.0" z="25" type="Zombie" pitch="0.0" xVel="0.0" yVel="0.0" zVel="0.0"/>
-      </DrawingDecorator>
-      <ServerQuitFromTimeUp timeLimitMs="10000"/>
-      <ServerQuitWhenAnyAgentFinishes/>
-    </ServerHandlers>
-  </ServerSection>
+    <ServerSection>
+        <ServerInitialConditions>
+            <Time>
+                <StartTime>20000</StartTime>
+                <AllowPassageOfTime>false</AllowPassageOfTime>
+            </Time>
+            <Weather>clear</Weather>
+            <AllowSpawning>true</AllowSpawning>
+            <AllowedMobs>Zombie</AllowedMobs>
+        </ServerInitialCondition>
+        <ServerHandlers>
+            <FlatWorldGenerator generatorString="3;7,20*89;1;"/>
+            <DrawingDecorator>
+                <DrawEntity x="-25.0" y="21.0" z="25" type="Zombie" pitch="0.0" xVel="0.0" yVel="0.0" zVel="0.0"/>
+            </DrawingDecorator>
+            <ServerQuitFromTimeUp timeLimitMs="10000"/>
+            <ServerQuitWhenAnyAgentFinishes/>
+        </ServerHandlers>
+    </ServerSection>
 
-  <AgentSection mode="Survival">
-    <Name>175Project</Name>
-    <AgentStart>
-        <Placement x="0" y="22" z="0" yaw="90"/>
-    </AgentStart>
-    <AgentHandlers>
-      <ChatCommands/>
-      <ObservationFromFullStats/>
-      <ContinuousMovementCommands turnSpeedDegs="180"/>
-      <ObservationFromNearbyEntities>
-        <Range name="entities" xrange="1000" yrange="60" zrange="60"/>
-      </ObservationFromNearbyEntities>
-    </AgentHandlers>
-  </AgentSection>
+    <AgentSection mode="Survival">
+        <Name>175Project</Name>
+        <AgentStart>
+            <Placement x="0" y="22" z="0" yaw="90"/>
+        </AgentStart>
+        <AgentHandlers>
+            <ChatCommands/>
+            <ObservationFromFullStats/>
+            <ContinuousMovementCommands turnSpeedDegs="180"/>
+            <ObservationFromNearbyEntities>
+                <Range name="entities" xrange="1000" yrange="60" zrange="60"/>
+            </ObservationFromNearbyEntities>
+        </AgentHandlers>
+    </AgentSection>
 </Mission>

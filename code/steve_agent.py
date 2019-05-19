@@ -19,7 +19,7 @@ class Steve(object):
         delta_pitch = self.angvel(target_pitch, pitch, 25.0)
         agent_host.sendCommand("turn " + str(delta_yaw))
         agent_host.sendCommand("pitch " + str(delta_pitch))
-        if abs(pitch-target_pitch) + abs(yaw-target_yaw) < threshhold:
+        if abs(pitch - target_pitch) + abs(yaw - target_yaw) < threshhold:
             agent_host.sendCommand("turn 0")
             agent_host.sendCommand("pitch 0")
             return True
@@ -94,4 +94,5 @@ class Steve(object):
             5: Total time
             6: Xpos
             7: Zpos '''
-        return [ob["Life"], ob["DamageTaken"], ob["DamageDealt"],ob["MobsKilled"], ob["TimeAlive"], ob["XPos"], ob["YPos"]]
+        return [ob["Life"], ob["DamageTaken"], ob["DamageDealt"], ob["MobsKilled"], ob["TimeAlive"], ob["XPos"],
+                ob["YPos"]]

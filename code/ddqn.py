@@ -7,11 +7,13 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras import backend as K
 import configparser
+
 config = configparser.ConfigParser()
 
 import tensorflow as tf
 
 EPISODES = config.get('DEFAULT', 'EPISODES')
+
 
 class DQNAgent:
     def __init__(self, state_size, action_size):
