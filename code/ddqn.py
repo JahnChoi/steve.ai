@@ -86,23 +86,25 @@ class DQNAgent:
 
 
 if __name__ == "__main__":
-    env = gym.make('CartPole-v1')
-    state_size = env.observation_space.shape[0]
-    action_size = env.action_space.n
+    # env = gym.make('CartPole-v1')
+    state_size = # SET STATE SIZE INTEGER HERE [damagedealt, damagetaken, life, mobskilled, timealive, xpos, ypos]
+    action_size = # SET ACTION SIZE INTEGER HERE [strike, move left, move right, move forward, move back, parry, jump]
     agent = DQNAgent(state_size, action_size)
     # agent.load("./save/cartpole-ddqn.h5")
     done = False
     batch_size = 32
 
     for e in range(EPISODES):
-        state = env.reset()
-        state = np.reshape(state, [1, state_size])
+        # state = env.reset()
+        state = # [damagedealt, damagetaken, etc actual values as a dictionary]
+        # state = np.reshape(state, [1, state_size])
         for time in range(500):
             # env.render()
             action = agent.act(state)
-            next_state, reward, done, _ = env.step(action)
+            # next_state, reward, done, _ = env.step(action)
+            next_state, reward, done, _ = # send action to malmo and get state, reward and if mission is done
             reward = reward if not done else -10
-            next_state = np.reshape(next_state, [1, state_size])
+            # next_state = np.reshape(next_state, [1, state_size])
             agent.remember(state, action, reward, next_state, done)
             state = next_state
             if done:
