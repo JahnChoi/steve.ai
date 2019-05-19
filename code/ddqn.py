@@ -18,11 +18,11 @@ class DQNAgent:
         self.state_size = state_size
         self.action_size = action_size
         self.memory = deque(maxlen=2000)
-        self.gamma = 0.95  # discount rate
-        self.epsilon = 1.0  # exploration rate
-        self.epsilon_min = 0.01
-        self.epsilon_decay = 0.99
-        self.learning_rate = 0.001
+        self.gamma = config.get('DEFAULT', 'GAMMA')  # discount rate
+        self.epsilon = config.get('DEFAULT', 'EPSILON')  # exploration rate
+        self.epsilon_min = config.get('DEFAULT', 'EPSILON_MIN')
+        self.epsilon_decay = config.get('DEFAULT', 'EPSILON_DECAY')
+        self.learning_rate = config.get('DEFAULT', 'LEARNING_RATE')
         self.model = self._build_model()
         self.target_model = self._build_model()
         self.update_target_model()
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     agent = DQNAgent(state_size, action_size)
     # agent.load("./save/cartpole-ddqn.h5")
     done = False
-    batch_size = 32
+    batch_size = config.get('DEFAULT', 'BATCH_SIZE')
 
     for e in range(EPISODES):
         # state = env.reset()
