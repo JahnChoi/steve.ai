@@ -18,17 +18,14 @@ class Steve(object):
     def lock_on(self, agent_host, ob, target_pitch, target_yaw, threshhold):
         pitch = ob.get(u'Pitch', 0)
         yaw = ob.get(u'Yaw', 0)
-        delta_yaw = self.angvel(target_yaw, yaw, 50.0)
-        delta_pitch = self.angvel(target_pitch, pitch, 50.0)
+        delta_yaw = self.angvel(target_yaw, yaw, 25.0)
+        delta_pitch = self.angvel(target_pitch, pitch, 25.0)
         agent_host.sendCommand("turn " + str(delta_yaw))
         agent_host.sendCommand("pitch " + str(delta_pitch))
-        """
         if abs(pitch-target_pitch) + abs(yaw-target_yaw) < threshhold:
-            print("TRIGGERED")
             agent_host.sendCommand("turn 0")
             agent_host.sendCommand("pitch 0")
             return True
-        """
         return False
 
     def angvel(self, target, current, scale):

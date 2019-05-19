@@ -46,7 +46,7 @@ print("Waiting for the mission to start ", end=' ')
 world_state = agent_host.getWorldState()
 while not world_state.has_mission_begun:
     print(".", end="")
-    time.sleep(0.1)
+    time.sleep(2)
     world_state = agent_host.getWorldState()
     for error in world_state.errors:
         print("Error:", error.text)
