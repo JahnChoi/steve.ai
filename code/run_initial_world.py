@@ -72,17 +72,19 @@ for repeat in range(EPISODES):
         for error in world_state.errors:
             print("Error:", error.text)
 
-        if world_state.number_of_observations_since_last_state > 0:
-            msg = world_state.observations[-1].text
-            ob = json.loads(msg)
-            steve = steve_agent.Steve()
-            # all entity_info in a tuple (x, y, z)
-            agent_info = (ob.get(u'XPos', 0), ob.get(u'YPos', 0), ob.get(u'ZPos', 0))
-            entities = steve.get_mob_loc(ob)
-            target = steve.closest_enemy(agent_info, entities)
-            # zombie mob height is 1.9 LMAO
-            target_yaw, target_pitch = steve.calcYawAndPitchToMob(target, agent_info[0], agent_info[1], agent_info[2], 1.9)
-            pointing = steve.lock_on(agent_host, ob, target_pitch, target_yaw, 5)
+    if world_state.number_of_observations_since_last_state > 0:
+        msg = world_state.observations[-1].text
+        ob = json.loads(msg)
+        steve = steve_agent.Steve()
+        state = steve.get_state(ob)
+        print(state)
+        # all entity_info in a tuple (x, y, z)
+        agent_info = (ob.get(u'XPos', 0), ob.get(u'YPos', 0), ob.get(u'ZPos', 0))
+        entities = steve.get_mob_loc(ob)
+        target = steve.closest_enemy(agent_info, entities)
+        # zombie mob height is 1.9 LMAO
+        target_yaw, target_pitch = steve.calcYawAndPitchToMob(target, agent_info[0], agent_info[1], agent_info[2], 1.9)
+        pointing = steve.lock_on(agent_host, ob, target_pitch, target_yaw, 5)
 
     print()
     print("Mission ended")
