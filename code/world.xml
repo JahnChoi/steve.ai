@@ -20,7 +20,7 @@
       <DrawingDecorator>
         <DrawEntity x="-25.0" y="21.0" z="25" type="Zombie" pitch="0.0" xVel="0.0" yVel="0.0" zVel="0.0"/>
       </DrawingDecorator>
-      <ServerQuitFromTimeUp timeLimitMs="30000"/>
+      <ServerQuitFromTimeUp timeLimitMs="10000"/>
       <ServerQuitWhenAnyAgentFinishes/>
     </ServerHandlers>
   </ServerSection>
@@ -31,10 +31,11 @@
         <Placement x="0" y="22" z="0" yaw="90"/>
     </AgentStart>
     <AgentHandlers>
+      <ChatCommands/>
       <ObservationFromFullStats/>
       <ContinuousMovementCommands turnSpeedDegs="180"/>
       <ObservationFromNearbyEntities>
-        <Range name="entities" xrange="100" yrange="60" zrange="60"/>
+        <Range name="entities" xrange="1000" yrange="60" zrange="60"/>
       </ObservationFromNearbyEntities>
     </AgentHandlers>
   </AgentSection>
