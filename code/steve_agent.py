@@ -65,7 +65,6 @@ class Steve(object):
         """Takes the agent and mob's location and calculates distance"""
         return math.sqrt((agent[0] - mob[0]) ** 2 + (agent[2] - mob[2]) ** 2)
 
-
     def perform_action(self, action):
         if action == actions.MOVE_LEFT:
             print("moving left")
@@ -85,3 +84,14 @@ class Steve(object):
             print("INVALID ACTION")
 
         # return new state, reward, and whether mission is done
+
+    def get_state(self, ob):
+        ''' 0: Life
+            1: Damage Taken
+            2: Damange Dealt
+            3: Mobs KIlled
+            4: Time Alive
+            5: Total time
+            6: Xpos
+            7: Zpos '''
+        return [ob["Life"], ob["DamageTaken"], ob["DamageDealt"],ob["MobsKilled"], ob["TimeAlive"], ob["XPos"], ob["YPos"]]

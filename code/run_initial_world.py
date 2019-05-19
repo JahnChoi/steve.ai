@@ -66,6 +66,8 @@ while world_state.is_mission_running:
         msg = world_state.observations[-1].text
         ob = json.loads(msg)
         steve = steve_agent.Steve()
+        state = steve.get_state(ob)
+        print(state)
         # all entity_info in a tuple (x, y, z)
         agent_info = (ob.get(u'XPos', 0), ob.get(u'YPos', 0), ob.get(u'ZPos', 0))
         entities = steve.get_mob_loc(ob)
