@@ -1,5 +1,6 @@
 import math
 from past.utils import old_div
+import actions
 
 try:
     from malmo import MalmoPython
@@ -8,12 +9,8 @@ except:
 
 
 class Steve(object):
-    def __init__(self, alpha=0.3, gamma=1, n=1):
-        self.eps = 0.2
-        self.q_table = {}
-        self.alpha = alpha
-        self.gamam = gamma
-        self.n = n
+    def __init__(self):
+        print("creating new steve.ai")
 
     def lock_on(self, agent_host, ob, target_pitch, target_yaw, threshhold):
         pitch = ob.get(u'Pitch', 0)
@@ -67,3 +64,24 @@ class Steve(object):
     def calculate_distance(self, agent, mob):
         """Takes the agent and mob's location and calculates distance"""
         return math.sqrt((agent[0] - mob[0]) ** 2 + (agent[2] - mob[2]) ** 2)
+
+
+    def perform_action(self, action):
+        if action == actions.MOVE_LEFT:
+            print("moving left")
+        elif action == actions.MOVE_RIGHT:
+            print("moving right")
+        elif action == actions.MOVE_FORWARD:
+            print("moving forward")
+        elif action == actions.MOVE_BACKWARD:
+            print("moving backward")
+        elif action == actions.STRIKE:
+            print("striking")
+        elif action == actions.BLOCK:
+            print("blocking")
+        elif actions == actions.JUMP:
+            print("jumping")
+        else:
+            print("INVALID ACTION")
+
+        # return new state, reward, and whether mission is done
