@@ -6,21 +6,23 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras import backend as K
+import configparser
+config = configparser.ConfigParser()
 
 import tensorflow as tf
 
-EPISODES = 5000
+EPISODES = config.get('DEFAULT', 'EPISODES')
 
 class DQNAgent:
     def __init__(self, state_size, action_size):
         self.state_size = state_size
         self.action_size = action_size
         self.memory = deque(maxlen=2000)
-        self.gamma = 0.95    # discount rate
-        self.epsilon = 1.0  # exploration rate
-        self.epsilon_min = 0.01
-        self.epsilon_decay = 0.99
-        self.learning_rate = 0.001
+        self.gamma = config.get('DEFAULT', 'GAMMA')  # discount rate
+        self.epsilon = config.get('DEFAULT', 'EPSILON')  # exploration rate
+        self.epsilon_min = config.get('DEFAULT', 'EPSILON_MIN')
+        self.epsilon_decay = config.get('DEFAULT', 'EPSILON_DECAY')
+        self.learning_rate = config.get('DEFAULT', 'LEARNING_RATE')
         self.model = self._build_model()
         self.target_model = self._build_model()
         self.update_target_model()
@@ -33,7 +35,7 @@ class DQNAgent:
 
     def _huber_loss(self, y_true, y_pred, clip_delta=1.0):
         error = y_true - y_pred
-        cond  = K.abs(error) <= clip_delta
+        cond = K.abs(error) <= clip_delta
 
         squared_loss = 0.5 * K.square(error)
         quadratic_loss = 0.5 * K.square(clip_delta) + clip_delta * (K.abs(error) - clip_delta)
@@ -86,23 +88,25 @@ class DQNAgent:
 
 
 if __name__ == "__main__":
-    env = gym.make('CartPole-v1')
-    state_size = env.observation_space.shape[0]
-    action_size = env.action_space.n
+    # env = gym.make('CartPole-v1')
+    state_size =  # SET STATE SIZE INTEGER HERE [damagedealt, damagetaken, life, mobskilled, timealive, xpos, zpos, deltaTsincemobattacked]
+    action_size =  # SET ACTION SIZE INTEGER HERE [strike, move left, move right, move forward, move back, block, jump]
     agent = DQNAgent(state_size, action_size)
     # agent.load("./save/cartpole-ddqn.h5")
     done = False
-    batch_size = 32
+    batch_size = config.get('DEFAULT', 'BATCH_SIZE')
 
     for e in range(EPISODES):
-        state = env.reset()
-        state = np.reshape(state, [1, state_size])
+        # state = env.reset()
+        state =  # [damagedealt, damagetaken, etc actual values as a dictionary]
+        # state = np.reshape(state, [1, state_size])
         for time in range(500):
             # env.render()
             action = agent.act(state)
-            next_state, reward, done, _ = env.step(action)
+            # next_state, reward, done, _ = env.step(action)
+            next_state, reward, done, _ =  # send action to malmo and get state, reward and if mission is done
             reward = reward if not done else -10
-            next_state = np.reshape(next_state, [1, state_size])
+            # next_state = np.reshape(next_state, [1, state_size])
             agent.remember(state, action, reward, next_state, done)
             state = next_state
             if done:
