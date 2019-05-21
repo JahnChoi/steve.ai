@@ -65,21 +65,29 @@ class Steve(object):
         """Takes the agent and mob's location and calculates distance"""
         return math.sqrt((agent[0] - mob[0]) ** 2 + (agent[2] - mob[2]) ** 2)
 
-    def perform_action(self, action):
+    def perform_action(self, agent_host, action):
         if action == actions.MOVE_LEFT:
             print("moving left")
+            agent_host.sendCommand("strafe -1")
         elif action == actions.MOVE_RIGHT:
             print("moving right")
+            agent_host.sendCommand("strafe 1")
         elif action == actions.MOVE_FORWARD:
             print("moving forward")
+            agent_host.sendCommand("move 1")
         elif action == actions.MOVE_BACKWARD:
             print("moving backward")
+            agent_host.sendCommand("move -1")
         elif action == actions.STRIKE:
             print("striking")
+            agent_host.sendCommand("attack 1")
         elif action == actions.BLOCK:
             print("blocking")
+            agent_host.sendCommand("use 1")
         elif actions == actions.JUMP:
             print("jumping")
+            agent_host.sendCommand("jump 1")
+
         else:
             print("INVALID ACTION")
 
