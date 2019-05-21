@@ -69,10 +69,17 @@ for repeat in range(EPISODES):
     world_state_txt = world_state.observations[-1].text
     world_state_json = json.loads(world_state_txt)
     if len(world_state_json['entities']) > 2:
-        agent_host.sendCommand('chat /kill @e[type=Zombie,c=1]')
+        # agent_host.sendCommand('chat /kill @e[type=Zombie,c=1]')
+        agent_host.sendCommand('chat /kill @e[type=!minecraft:player]')
 
     print()
     print("Mission running ", end=' ')
+
+    x = world_state_json['XPos']
+    y = world_state_json['YPos']
+    z = world_state_json['ZPos']
+    agent_host.sendCommand('chat /summon zombie {} {} {}'.format(x+15, y, z))
+    time.sleep(2)
 
     steve = steve_agent.Steve()
     # Loop until mission ends:

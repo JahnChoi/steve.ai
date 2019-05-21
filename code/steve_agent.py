@@ -68,16 +68,16 @@ class Steve(object):
     def perform_action(self, agent_host, action):
         if action == actions.MOVE_LEFT:
             print("moving left")
-            agent_host.sendCommand("strafe -1")
+            agent_host.sendCommand("left")
         elif action == actions.MOVE_RIGHT:
             print("moving right")
-            agent_host.sendCommand("strafe 1")
+            agent_host.sendCommand("right")
         elif action == actions.MOVE_FORWARD:
             print("moving forward")
-            agent_host.sendCommand("move 1")
+            agent_host.sendCommand("forward")
         elif action == actions.MOVE_BACKWARD:
             print("moving backward")
-            agent_host.sendCommand("move -1")
+            agent_host.sendCommand("backward")
         elif action == actions.STRIKE:
             print("striking")
             agent_host.sendCommand("attack 1")
