@@ -1,11 +1,17 @@
 import math
 from past.utils import old_div
 import actions
+import time
 
 try:
     from malmo import MalmoPython
 except:
     import MalmoPython
+
+import configparser
+
+config = configparser.ConfigParser()
+config.read('config.ini')
 
     # ******DISCRETE WORLD SIZE*****
     # AGENT MOVES DISCRETELY - round locations
@@ -90,29 +96,41 @@ class Steve(object):
         return math.sqrt((agent[0] - mob[0]) ** 2 + (agent[2] - mob[2]) ** 2)
 
     def perform_action(self, agent_host, action):
-        agent_host.sendCommand("move 0")
-        agent_host.sendCommand("strafe 0")
         if action == actions.MOVE_LEFT:
             print("moving left")
             agent_host.sendCommand("strafe -1")
+            agent_host.sendCommand("strafe 0")
         elif action == actions.MOVE_RIGHT:
             print("moving right")
             agent_host.sendCommand("strafe 1")
+            agent_host.sendCommand("strafe 0")
         elif action == actions.MOVE_FORWARD:
             print("moving forward")
             agent_host.sendCommand("move 1")
+            agent_host.sendCommand("move 0")
         elif action == actions.MOVE_BACKWARD:
             print("moving backward")
             agent_host.sendCommand("move -1")
+            agent_host.sendCommand("move 0")
         elif action == actions.STRIKE:
             print("striking")
+            agent_host.sendCommand("hotbar.1 1")
+            agent_host.sendCommand("hotbar.1 0")
             agent_host.sendCommand("attack 1")
+            agent_host.sendCommand("attack 0")
         elif action == actions.BLOCK:
             print("blocking")
+            agent_host.sendCommand("hotbar.2 1")
+            agent_host.sendCommand("hotbar.2 0")
             agent_host.sendCommand("use 1")
+            time.sleep(float(config.get('DEFAULT', 'TIME_STEP')))
+            # time.sleep(1)
+            agent_host.sendCommand("use 0")
+
         elif action == actions.JUMP:
             print("jumping")
             agent_host.sendCommand("jump 1")
+            agent_host.sendCommand("jump 0")
         else:
             print("INVALID ACTION: " + str(action))
 

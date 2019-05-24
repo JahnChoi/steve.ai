@@ -95,7 +95,7 @@ for repeat in range(EPISODES):
 
     while world_state.is_mission_running:
         print(".", end="")
-        time.sleep(0.1) # discretize time/actions
+        time.sleep(float(config.get('DEFAULT', 'TIME_STEP'))) # discretize time/actions
         world_state = agent_host.getWorldState()
         for error in world_state.errors:
             print("Error:", error.text)

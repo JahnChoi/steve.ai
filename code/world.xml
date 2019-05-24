@@ -14,7 +14,7 @@
             <Weather>clear</Weather>
             <AllowSpawning>true</AllowSpawning>
             <AllowedMobs>Zombie</AllowedMobs>
-        </ServerInitialCondition>
+        </ServerInitialConditions>
         <ServerHandlers>
             <FlatWorldGenerator generatorString="3;7,20*89;1;"/>
             <!--<DrawingDecorator>-->
@@ -31,30 +31,15 @@
             <Placement x="0" y="22" z="0" yaw="90"/>
             <Inventory>
                 <InventoryItem slot="0" type="diamond_sword"/>
+                <InventoryItem slot="1" type="shield"/>
             </Inventory>
         </AgentStart>
         <AgentHandlers>
             <ChatCommands/>
             <MissionQuitCommands quitDescription="done"/>
             <ObservationFromFullStats/>
-            <ContinuousMovementCommands turnSpeedDegs="180">
-                <ModifierList type="deny-list">
-                    <command>move</command>
-                    <command>strafe</command>
-                    <command>jump</command>
-                    <command>attack</command>
-                    <command>use</command>
-                </ModifierList>
-            </ContinuousMovementCommands>
-            <DiscreteMovementCommand>
-                <ModifierList type="allow-list">
-                    <command>move</command>
-                    <command>strafe</command>
-                    <command>jump</command>
-                    <command>attack</command>
-                    <command>use</command>
-                </ModifierList>
-            </DiscreteMovementCommand>
+            <InventoryCommands/>
+            <ContinuousMovementCommands turnSpeedDegs="180"/>
             <ObservationFromNearbyEntities>
                 <Range name="entities" xrange="100" yrange="20" zrange="100"/>
             </ObservationFromNearbyEntities>
