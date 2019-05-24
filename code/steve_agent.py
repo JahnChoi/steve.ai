@@ -26,7 +26,7 @@ class Steve(object):
         agent_info = (ob.get(u'XPos', 0), ob.get(u'YPos', 0), ob.get(u'ZPos', 0))
         entities = self.get_mob_loc(ob)
         target = self.closest_enemy(agent_info, entities)
-        target_yaw, target_pitch = self.calcYawAndPitchToMob(target, agent_info[0], agent_info[1], agent_info[2], 1.5)
+        target_yaw, target_pitch = self.calcYawAndPitchToMob(target, agent_info[0], agent_info[1], agent_info[2], 1.0)
         pointing = self.lock_on(agent_host, ob, target_pitch, target_yaw, 5)
 
 
@@ -66,7 +66,11 @@ class Steve(object):
             if (ent["name"] == "175Project"):
                 continue
             mob_id = ent['id']
-            entities[mob_id] = (ent['x'], ent['y'], ent['z'], ent["life"])
+            try:
+                entities[mob_id] = (ent['x'], ent['y'], ent['z'], ent['life'])
+            except:
+                entities[mob_id] = (ent['x'], ent['y'], ent['z'], 0)
+                print("key error caught")
         self.entities = entities
         return entities
 
@@ -106,11 +110,11 @@ class Steve(object):
         elif action == actions.BLOCK:
             print("blocking")
             agent_host.sendCommand("use 1")
-        elif actions == actions.JUMP:
+        elif action == actions.JUMP:
             print("jumping")
             agent_host.sendCommand("jump 1")
         else:
-            print("INVALID ACTION")
+            print("INVALID ACTION: " + str(action))
 
         # return new state, reward, and whether mission is done
 

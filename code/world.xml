@@ -35,6 +35,7 @@
         </AgentStart>
         <AgentHandlers>
             <ChatCommands/>
+            <MissionQuitCommands quitDescription="done"/>
             <ObservationFromFullStats/>
 <!--            <DiscreteMovementCommand/>-->
             <ContinuousMovementCommands turnSpeedDegs="180"/>
