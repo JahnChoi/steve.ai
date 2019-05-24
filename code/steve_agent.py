@@ -13,6 +13,7 @@ except:
     # ADD ZOMBIE POSITION TO INPUTS
     # add sleeps for discrete time
     # figure out reward structure: ++health, --health, --time
+    # if zombie is dead, end loop
 
 
 class Steve(object):
@@ -106,7 +107,6 @@ class Steve(object):
         elif actions == actions.JUMP:
             print("jumping")
             agent_host.sendCommand("jump 1")
-
         else:
             print("INVALID ACTION")
 
