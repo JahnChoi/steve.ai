@@ -19,6 +19,14 @@ class Steve(object):
     def __init__(self):
         print("creating new steve.ai")
 
+    def master_lock(ob, agent_host):
+        agent_info = (ob.get(u'XPos', 0), ob.get(u'YPos', 0), ob.get(u'ZPos', 0))
+        entities = steve.get_mob_loc(ob)
+        target = steve.closest_enemy(agent_info, entities)
+        target_yaw, target_pitch = steve.calcYawAndPitchToMob(target, agent_info[0], agent_info[1], agent_info[2], 1.9)
+        pointing = steve.lock_on(agent_host, ob, target_pitch, target_yaw, 5)
+
+
     def lock_on(self, agent_host, ob, target_pitch, target_yaw, threshhold):
         pitch = ob.get(u'Pitch', 0)
         yaw = ob.get(u'Yaw', 0)
@@ -111,3 +119,7 @@ class Steve(object):
             7: Zpos'''
         return [ob["Life"], ob["DamageTaken"], ob["DamageDealt"], ob["MobsKilled"], ob["TimeAlive"], ob["XPos"],
                 ob["YPos"]]
+
+
+
+

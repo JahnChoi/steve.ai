@@ -97,13 +97,7 @@ for repeat in range(EPISODES):
         if world_state.number_of_observations_since_last_state > 0:
             msg = world_state.observations[-1].text
             ob = json.loads(msg)
-            # all entity_info in a tuple (x, y, z)
-            agent_info = (ob.get(u'XPos', 0), ob.get(u'YPos', 0), ob.get(u'ZPos', 0))
-            entities = steve.get_mob_loc(ob)
-            target = steve.closest_enemy(agent_info, entities)
-            # zombie mob height is 1.9 LMAO
-            target_yaw, target_pitch = steve.calcYawAndPitchToMob(target, agent_info[0], agent_info[1], agent_info[2], 1.9)
-            pointing = steve.lock_on(agent_host, ob, target_pitch, target_yaw, 5)
+            lock_on = steve.master_lock(ob, agent_host)
 
             # MAIN NN LOGIC
             # check if we've seeded initial state just for the first time
