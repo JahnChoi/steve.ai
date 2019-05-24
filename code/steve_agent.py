@@ -7,6 +7,13 @@ try:
 except:
     import MalmoPython
 
+    # ******DISCRETE WORLD SIZE*****
+    # AGENT MOVES DISCRETELY - round locations
+    # ZOMBIE MOVES DISCRETELY / IS STATIONARY - round
+    # ADD ZOMBIE POSITION TO INPUTS
+    # add sleeps for discrete time
+    # figure out reward structure: ++health, --health, --time
+
 
 class Steve(object):
     def __init__(self):
@@ -101,6 +108,6 @@ class Steve(object):
             4: Time Alive
             5: Total time
             6: Xpos
-            7: Zpos '''
+            7: Zpos'''
         return [ob["Life"], ob["DamageTaken"], ob["DamageDealt"], ob["MobsKilled"], ob["TimeAlive"], ob["XPos"],
                 ob["YPos"]]
