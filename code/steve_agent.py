@@ -18,6 +18,8 @@ except:
 class Steve(object):
     def __init__(self):
         print("creating new steve.ai")
+        self.target = None
+        self.entities = None
 
     def master_lock(self, ob, agent_host):
         agent_info = (ob.get(u'XPos', 0), ob.get(u'YPos', 0), ob.get(u'ZPos', 0))
@@ -63,18 +65,20 @@ class Steve(object):
             if (ent["name"] == "175Project"):
                 continue
             mob_id = ent['id']
-            entities[mob_id] = (ent['x'], ent['y'], ent['z'])
+            entities[mob_id] = (ent['x'], ent['y'], ent['z'], ent["life"])
+        self.entities = entities
         return entities
 
     def closest_enemy(self, agent, entities):
-        mob_name = ""
+        mob_id = ""
         dist = 10000
         for mobs in entities.keys():
             new_dist = self.calculate_distance(agent, entities[mobs])
             if (dist > new_dist):
-                mob_name = mobs
+                mob_id = mobs
                 dist = new_dist
-        return entities[mob_name]
+        self.target = mob_id
+        return entities[mob_id]
 
     def calculate_distance(self, agent, mob):
         """Takes the agent and mob's location and calculates distance"""
@@ -117,5 +121,6 @@ class Steve(object):
             5: Total time
             6: Xpos
             7: Zpos'''
-        return [float(round(ob["Life"])), float(round(ob["DamageDealt"])), float(ob["MobsKilled"]), float(round(ob["XPos"])),
+        target_health = self.entities[self.target][3]
+        return [float(round(ob["Life"])), float(round(target_health)), float(ob["MobsKilled"]), float(round(ob["XPos"])),
                 float(round(ob["ZPos"])), float(time_alive)]
