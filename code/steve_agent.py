@@ -30,9 +30,11 @@ class Steve(object):
 
     def master_lock(self, ob, agent_host):
         agent_info = (ob.get(u'XPos', 0), ob.get(u'YPos', 0), ob.get(u'ZPos', 0))
-        entities = self.get_mob_loc(ob)
-        target = self.closest_enemy(agent_info, entities)
-        target_yaw, target_pitch = self.calcYawAndPitchToMob(target, agent_info[0], agent_info[1], agent_info[2], 1.0)
+        self.get_mob_loc(ob)
+        if (len(self.entities) < 1):
+            return
+        self.closest_enemy(agent_info, self.entities)
+        target_yaw, target_pitch = self.calcYawAndPitchToMob(self.entities[self.target], agent_info[0], agent_info[1], agent_info[2], 1.0)
         pointing = self.lock_on(agent_host, ob, target_pitch, target_yaw, 5)
 
 
@@ -79,7 +81,6 @@ class Steve(object):
                 entities[mob_id] = (ent['x'], ent['y'], ent['z'], 0)
                 print("key error caught")
         self.entities = entities
-        return entities
 
     def closest_enemy(self, agent, entities):
         mob_id = ""
@@ -90,7 +91,6 @@ class Steve(object):
                 mob_id = mobs
                 dist = new_dist
         self.target = mob_id
-        return entities[mob_id]
 
     def calculate_distance(self, agent, mob):
         """Takes the agent and mob's location and calculates distance"""
