@@ -31,7 +31,7 @@ class Steve(object):
     def master_lock(self, ob, agent_host):
         agent_info = (ob.get(u'XPos', 0), ob.get(u'YPos', 0), ob.get(u'ZPos', 0))
         self.get_mob_loc(ob)
-        if (len(self.entities) < 1):
+        if (self.check_entities == False):
             return
         self.closest_enemy(agent_info, self.entities)
         target_yaw, target_pitch = self.calcYawAndPitchToMob(self.entities[self.target], agent_info[0], agent_info[1], agent_info[2], 1.0)
@@ -146,8 +146,17 @@ class Steve(object):
             5: Target Life
             6: Target X
             7: Target Z'''
+        if (self.check_entities == False):
+            return
         target_health = self.entities[self.target][3]
         target_x, target_z = self.entities[self.target][0], self.entities[self.target][2]
         return [float(round(ob["Life"])), float(time_alive), float(ob["MobsKilled"]), float(round(ob["XPos"])),
                 float(round(ob["ZPos"])), float(round(target_health)), float(round(target_x)), 
                 float(round(target_z))]
+
+    def check_entities(self):
+        if (len(self.entities) < 1):
+            return False
+        else if (self.target != None && not in self.entities.keys()):
+            return False
+        return True
