@@ -36,7 +36,24 @@
         <AgentHandlers>
             <ChatCommands/>
             <ObservationFromFullStats/>
-            <ContinuousMovementCommands turnSpeedDegs="180"/>
+            <ContinuousMovementCommands turnSpeedDegs="180">
+                <ModifierList type="deny-list">
+                    <command>move</command>
+                    <command>strafe</command>
+                    <command>jump</command>
+                    <command>attack</command>
+                    <command>use</command>
+                </ModifierList>
+            </ContinuousMovementCommands>
+            <DiscreteMovementCommand>
+                <ModifierList type="allow-list">
+                    <command>move</command>
+                    <command>strafe</command>
+                    <command>jump</command>
+                    <command>attack</command>
+                    <command>use</command>
+                </ModifierList>
+            </DiscreteMovementCommand>
             <ObservationFromNearbyEntities>
                 <Range name="entities" xrange="100" yrange="20" zrange="100"/>
             </ObservationFromNearbyEntities>
