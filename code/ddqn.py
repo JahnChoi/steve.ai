@@ -9,10 +9,11 @@ from tensorflow.keras import backend as K
 import configparser
 
 config = configparser.ConfigParser()
-
-import tensorflow as tf
+config.read('config.ini')
 
 EPISODES = config.get('DEFAULT', 'EPISODES')
+
+import tensorflow as tf
 
 
 class DQNAgent:
@@ -20,11 +21,11 @@ class DQNAgent:
         self.state_size = state_size
         self.action_size = action_size
         self.memory = deque(maxlen=2000)
-        self.gamma = config.get('DEFAULT', 'GAMMA')  # discount rate
-        self.epsilon = config.get('DEFAULT', 'EPSILON')  # exploration rate
-        self.epsilon_min = config.get('DEFAULT', 'EPSILON_MIN')
-        self.epsilon_decay = config.get('DEFAULT', 'EPSILON_DECAY')
-        self.learning_rate = config.get('DEFAULT', 'LEARNING_RATE')
+        self.gamma = float(config.get('DEFAULT', 'GAMMA'))  # discount rate
+        self.epsilon = float(config.get('DEFAULT', 'EPSILON'))  # exploration rate
+        self.epsilon_min = float(config.get('DEFAULT', 'EPSILON_MIN'))
+        self.epsilon_decay = float(config.get('DEFAULT', 'EPSILON_DECAY'))
+        self.learning_rate = float(config.get('DEFAULT', 'LEARNING_RATE'))
         self.model = self._build_model()
         self.target_model = self._build_model()
         self.update_target_model()

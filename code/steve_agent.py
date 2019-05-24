@@ -19,12 +19,12 @@ class Steve(object):
     def __init__(self):
         print("creating new steve.ai")
 
-    def master_lock(ob, agent_host):
+    def master_lock(self, ob, agent_host):
         agent_info = (ob.get(u'XPos', 0), ob.get(u'YPos', 0), ob.get(u'ZPos', 0))
-        entities = steve.get_mob_loc(ob)
-        target = steve.closest_enemy(agent_info, entities)
-        target_yaw, target_pitch = steve.calcYawAndPitchToMob(target, agent_info[0], agent_info[1], agent_info[2], 1.9)
-        pointing = steve.lock_on(agent_host, ob, target_pitch, target_yaw, 5)
+        entities = self.get_mob_loc(ob)
+        target = self.closest_enemy(agent_info, entities)
+        target_yaw, target_pitch = self.calcYawAndPitchToMob(target, agent_info[0], agent_info[1], agent_info[2], 1.5)
+        pointing = self.lock_on(agent_host, ob, target_pitch, target_yaw, 5)
 
 
     def lock_on(self, agent_host, ob, target_pitch, target_yaw, threshhold):
@@ -117,9 +117,6 @@ class Steve(object):
             5: Total time
             6: Xpos
             7: Zpos'''
+        print("Types: ", float(round(ob["Life"])), type(ob["DamageTaken"]), type(ob["DamageDealt"]), type(ob["MobsKilled"]), type(ob["TimeAlive"]), type(ob["XPos"]))
         return [ob["Life"], ob["DamageTaken"], ob["DamageDealt"], ob["MobsKilled"], ob["TimeAlive"], ob["XPos"],
                 ob["YPos"]]
-
-
-
-

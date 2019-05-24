@@ -11,6 +11,7 @@ import configparser
 from ddqn import DQNAgent
 
 config = configparser.ConfigParser()
+config.read('config.ini')
 
 # Create default Malmo objects:
 
@@ -89,7 +90,7 @@ for repeat in range(EPISODES):
 
     while world_state.is_mission_running:
         print(".", end="")
-        time.sleep(0.1)
+        time.sleep(0.1) # discretize time/actions
         world_state = agent_host.getWorldState()
         for error in world_state.errors:
             print("Error:", error.text)
@@ -99,28 +100,30 @@ for repeat in range(EPISODES):
             ob = json.loads(msg)
             lock_on = steve.master_lock(ob, agent_host)
 
-            # MAIN NN LOGIC
-            # check if we've seeded initial state just for the first time
-            if have_initial_state == 0:
-                state = steve.get_state(ob)
-                have_initial_state = 1
+            steve.get_state(ob)
 
-            action = nn.act(state)
-            steve.perform_action(agent_host, action) # send action to malmo
-            reward = steve.get_reward() # get reward
-            next_state = steve.get_state(ob) # get next state
-            done = False # mission is never one, keep done False
-            # reward = reward if not done else -10 ?
-            nn.remember(state, action, reward, next_state, done)
-            state = next_state
-            if done:
-                nn.update_target_model()
-                print("episode: {}/{}, score: {}, e: {:.2}"
-                      .format(e, EPISODES, time, nn.epsilon))
-                break
-            if len(nn.memory) > batch_size:
-                nn.replay(batch_size)
-            # MAIN NN LOGIC
+            # # MAIN NN LOGIC
+            # # check if we've seeded initial state just for the first time
+            # if have_initial_state == 0:
+            #     state = steve.get_state(ob)
+            #     have_initial_state = 1
+            #
+            # action = nn.act(state)
+            # steve.perform_action(agent_host, action) # send action to malmo
+            # reward = steve.get_reward() # get reward
+            # next_state = steve.get_state(ob) # get next state
+            # done = False # mission is never one, keep done False
+            # # reward = reward if not done else -10 ?
+            # nn.remember(state, action, reward, next_state, done)
+            # state = next_state
+            # if done:
+            #     nn.update_target_model()
+            #     print("episode: {}/{}, score: {}, e: {:.2}"
+            #           .format(e, EPISODES, time, nn.epsilon))
+            #     break
+            # if len(nn.memory) > batch_size:
+            #     nn.replay(batch_size)
+            # # MAIN NN LOGIC
 
     print()
     print("Mission ended")
