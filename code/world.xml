@@ -35,10 +35,11 @@
         </AgentStart>
         <AgentHandlers>
             <ChatCommands/>
+            <DiscreteMovementCommand/>
             <ObservationFromFullStats/>
             <ContinuousMovementCommands turnSpeedDegs="180"/>
             <ObservationFromNearbyEntities>
-                <Range name="entities" xrange="1000" yrange="60" zrange="60"/>
+                <Range name="entities" xrange="100" yrange="20" zrange="100"/>
             </ObservationFromNearbyEntities>
         </AgentHandlers>
     </AgentSection>
