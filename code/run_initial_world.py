@@ -71,9 +71,9 @@ for repeat in range(EPISODES):
 
     world_state_txt = world_state.observations[-1].text
     world_state_json = json.loads(world_state_txt)
-    if len(world_state_json['entities']) > 2:
+    # if len(world_state_json['entities']) > 2:
         # agent_host.sendCommand('chat /kill @e[type=Zombie,c=1]')
-        agent_host.sendCommand('chat /kill @e[type=!minecraft:player]')
+    agent_host.sendCommand('chat /kill @e[type=!minecraft:player]')
 
     time.sleep(2)
 
@@ -102,8 +102,9 @@ for repeat in range(EPISODES):
 
         if world_state.number_of_observations_since_last_state > 0:
             # if zombie is dead, quit the mission and go to next
-            # if len(world_state_json['entities']) < 2:
-            #     agent_host.sendCommand("quit")
+            if len(world_state_json['entities']) < 2:
+                agent_host.sendCommand("quit")
+                break
 
             msg = world_state.observations[-1].text
             ob = json.loads(msg)

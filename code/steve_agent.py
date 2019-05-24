@@ -71,6 +71,7 @@ class Steve(object):
         for ent in ob["entities"]:
             if (ent["name"] == "175Project"):
                 continue
+            print(ent["name"])
             mob_id = ent['id']
             try:
                 entities[mob_id] = (ent['x'], ent['y'], ent['z'], ent['life'])
