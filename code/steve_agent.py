@@ -88,16 +88,16 @@ class Steve(object):
     def perform_action(self, agent_host, action):
         if action == actions.MOVE_LEFT:
             print("moving left")
-            agent_host.sendCommand("left")
+            agent_host.sendCommand("strafe -1")
         elif action == actions.MOVE_RIGHT:
             print("moving right")
-            agent_host.sendCommand("right")
+            agent_host.sendCommand("strafe 1")
         elif action == actions.MOVE_FORWARD:
             print("moving forward")
-            agent_host.sendCommand("forward")
+            agent_host.sendCommand("move 1")
         elif action == actions.MOVE_BACKWARD:
             print("moving backward")
-            agent_host.sendCommand("backward")
+            agent_host.sendCommand("move -1")
         elif action == actions.STRIKE:
             print("striking")
             agent_host.sendCommand("attack 1")
@@ -114,13 +114,15 @@ class Steve(object):
 
     def get_state(self, ob, time_alive):
         ''' 0: Life
-            1: Damage Taken
-            2: Damange Dealt
-            3: Mobs KIlled
-            4: Time Alive
-            5: Total time
-            6: Xpos
-            7: Zpos'''
+            1: Time Alive
+            2: Mobs Killed
+            3: Agent X
+            4: Agent Z
+            5: Target Life
+            6: Target X
+            7: Target Z'''
         target_health = self.entities[self.target][3]
-        return [float(round(ob["Life"])), float(round(target_health)), float(ob["MobsKilled"]), float(round(ob["XPos"])),
-                float(round(ob["ZPos"])), float(time_alive)]
+        target_x, target_z = self.entities[self.target][0], self.entities[self.target][2]
+        return [float(round(ob["Life"])), float(time_alive), float(ob["MobsKilled"]), float(round(ob["XPos"])),
+                float(round(ob["ZPos"])), float(round(target_health)), float(round(target_x)), 
+                float(round(target_z))]
