@@ -35,7 +35,7 @@ EPISODES = 5000
 
 state_size =  config.get('DEFAULT', 'STATE_SIZE')
 action_size =  config.get('DEFAULT', 'ACTION_SIZE')
-agent = DQNAgent(state_size, action_size)
+nn = DQNAgent(state_size, action_size)
 done = False
 batch_size = config.get('DEFAULT', 'BATCH_SIZE')
 
@@ -108,24 +108,24 @@ for repeat in range(EPISODES):
             # MAIN NN LOGIC
             # check if we've seeded initial state just for the first time
             if have_initial_state == 0:
-                state = agent.get_state(ob)
+                state = steve.get_state(ob)
                 have_initial_state = 1
 
-            action = agent.act(state)
-            steve.perform_action(action) # send action to malmo
-            reward = steve.get_reward(); # get reward
+            action = nn.act(state)
+            steve.perform_action(agent_host, action) # send action to malmo
+            reward = steve.get_reward() # get reward
             next_state = steve.get_state(ob) # get next state
             done = False # mission is never one, keep done False
-            reward = reward if not done else -10
-            agent.remember(state, action, reward, next_state, done)
+            # reward = reward if not done else -10 ?
+            nn.remember(state, action, reward, next_state, done)
             state = next_state
             if done:
-                agent.update_target_model()
+                nn.update_target_model()
                 print("episode: {}/{}, score: {}, e: {:.2}"
-                      .format(e, EPISODES, time, agent.epsilon))
+                      .format(e, EPISODES, time, nn.epsilon))
                 break
-            if len(agent.memory) > batch_size:
-                agent.replay(batch_size)
+            if len(nn.memory) > batch_size:
+                nn.replay(batch_size)
             # MAIN NN LOGIC
 
     print()
