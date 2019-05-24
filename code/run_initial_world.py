@@ -75,6 +75,8 @@ for repeat in range(EPISODES):
         # agent_host.sendCommand('chat /kill @e[type=Zombie,c=1]')
         agent_host.sendCommand('chat /kill @e[type=!minecraft:player]')
 
+    time.sleep(2)
+
     print()
     print("Mission running ", end=' ')
 
@@ -82,6 +84,7 @@ for repeat in range(EPISODES):
     y = world_state_json['YPos']
     z = world_state_json['ZPos']
     agent_host.sendCommand('chat /summon zombie {} {} {}'.format(x+15, y, z))
+
     time.sleep(2)
 
     steve = steve_agent.Steve()
@@ -98,6 +101,10 @@ for repeat in range(EPISODES):
             print("Error:", error.text)
 
         if world_state.number_of_observations_since_last_state > 0:
+            # if zombie is dead, quit the mission and go to next
+            # if len(world_state_json['entities']) < 2:
+            #     agent_host.sendCommand("quit")
+
             msg = world_state.observations[-1].text
             ob = json.loads(msg)
             lock_on = steve.master_lock(ob, agent_host)
@@ -119,11 +126,11 @@ for repeat in range(EPISODES):
             steve.perform_action(agent_host, action) # send action to malmo
 
             next_state = steve.get_state(ob, time_alive)
-            if (next_state[1] == 0):
+            if (repeat == 5000):
                 done = True
             else:
                 done = False
-            reward = next_state[0] - next_state[1] - time_alive  # get reward
+            reward = next_state[0] - next_state[5] - time_alive  # get reward
             print(reward)
             next_state = np.reshape(next_state, [1, state_size])
             # reward = reward if not done else -10 ?

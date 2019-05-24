@@ -35,8 +35,8 @@
         </AgentStart>
         <AgentHandlers>
             <ChatCommands/>
-            <DiscreteMovementCommand/>
             <ObservationFromFullStats/>
+<!--            <DiscreteMovementCommand/>-->
             <ContinuousMovementCommands turnSpeedDegs="180"/>
             <ObservationFromNearbyEntities>
                 <Range name="entities" xrange="100" yrange="20" zrange="100"/>

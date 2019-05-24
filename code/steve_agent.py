@@ -86,6 +86,8 @@ class Steve(object):
         return math.sqrt((agent[0] - mob[0]) ** 2 + (agent[2] - mob[2]) ** 2)
 
     def perform_action(self, agent_host, action):
+        agent_host.sendCommand("move 0")
+        agent_host.sendCommand("strafe 0")
         if action == actions.MOVE_LEFT:
             print("moving left")
             agent_host.sendCommand("strafe -1")
