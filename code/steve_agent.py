@@ -117,6 +117,5 @@ class Steve(object):
             5: Total time
             6: Xpos
             7: Zpos'''
-        print("Types: ", float(round(ob["Life"])), type(ob["DamageTaken"]), type(ob["DamageDealt"]), type(ob["MobsKilled"]), type(ob["TimeAlive"]), type(ob["XPos"]))
-        return [ob["Life"], ob["DamageTaken"], ob["DamageDealt"], ob["MobsKilled"], ob["TimeAlive"], ob["XPos"],
-                ob["YPos"]]
+        return [float(round(ob["Life"])), float(round(ob["DamageTaken"])), float(round(ob["DamageDealt"])), float(ob["MobsKilled"]), float(ob["TimeAlive"]), float(round(ob["XPos"])),
+                float(round(ob["ZPos"]))]
