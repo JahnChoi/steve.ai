@@ -41,6 +41,7 @@ done = False
 batch_size = config.get('DEFAULT', 'BATCH_SIZE')
 
 for repeat in range(EPISODES):
+    time_start = time.time()
     my_mission = MalmoPython.MissionSpec(missionXML, True)
     my_mission_record = MalmoPython.MissionRecordSpec()
 
@@ -100,7 +101,10 @@ for repeat in range(EPISODES):
             ob = json.loads(msg)
             lock_on = steve.master_lock(ob, agent_host)
 
-            steve.get_state(ob)
+            time_alive = int(time.time() - time_start)
+            state = steve.get_state(ob, time_alive)
+
+            print(state)
 
             # # MAIN NN LOGIC
             # # check if we've seeded initial state just for the first time

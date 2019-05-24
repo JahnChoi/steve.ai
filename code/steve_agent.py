@@ -108,7 +108,7 @@ class Steve(object):
 
         # return new state, reward, and whether mission is done
 
-    def get_state(self, ob):
+    def get_state(self, ob, time_alive):
         ''' 0: Life
             1: Damage Taken
             2: Damange Dealt
@@ -117,5 +117,5 @@ class Steve(object):
             5: Total time
             6: Xpos
             7: Zpos'''
-        return [float(round(ob["Life"])), float(round(ob["DamageTaken"])), float(round(ob["DamageDealt"])), float(ob["MobsKilled"]), float(ob["TimeAlive"]), float(round(ob["XPos"])),
-                float(round(ob["ZPos"]))]
+        return [float(round(ob["Life"])), float(round(ob["DamageDealt"])), float(ob["MobsKilled"]), float(round(ob["XPos"])),
+                float(round(ob["ZPos"])), float(time_alive)]
