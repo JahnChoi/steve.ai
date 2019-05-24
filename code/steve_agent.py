@@ -124,7 +124,8 @@ class Steve(object):
             agent_host.sendCommand("hotbar.2 1")
             agent_host.sendCommand("hotbar.2 0")
             agent_host.sendCommand("use 1")
-            time.sleep(float(config.get('DEFAULT', 'TIME_STEP')))
+            time_to_block = float(config.get('DEFAULT', 'TIME_STEP'))*.75
+            time.sleep(time_to_block)
             # time.sleep(1)
             agent_host.sendCommand("use 0")
 
@@ -157,6 +158,6 @@ class Steve(object):
     def check_entities(self):
         if (len(self.entities) < 1):
             return False
-        else if (self.target != None && not in self.entities.keys()):
+        elif (self.target != None and self.target not in self.entities.keys()):
             return False
         return True
