@@ -5,9 +5,9 @@
         <Summary>Steve.AI</Summary>
     </About>
 
-<!--    <ModSettings>-->
-<!--        <MsPerTick>25</MsPerTick>-->
-<!--    </ModSettings>-->
+    <ModSettings>
+        <MsPerTick>50</MsPerTick>
+    </ModSettings>
 
     <ServerSection>
         <ServerInitialConditions>

@@ -133,7 +133,6 @@ for repeat in range(EPISODES):
 
             if (repeat == 5000):
                 done = True
-                agent_host.sendCommand("quit")
             else:
                 done = False
 
