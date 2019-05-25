@@ -76,7 +76,7 @@ class Steve(object):
         """gets the locations of all the entities in world state"""
         entities = {}
         for ent in ob["entities"]:
-            if (ent["name"] == "175Project"):
+            if (ent["name"] == "Steve.AI"):
                 continue
             print(ent["name"])
             mob_id = ent['id']

@@ -35,7 +35,7 @@
     </ServerSection>
 
     <AgentSection mode="Survival">
-        <Name>175Project</Name>
+        <Name>Steve.AI</Name>
         <AgentStart>
             <Placement x="0" y="23" z="0" yaw="90"/>
             <Inventory>

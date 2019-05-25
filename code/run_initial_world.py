@@ -43,7 +43,6 @@ done = False
 batch_size = int(config.get('DEFAULT', 'BATCH_SIZE'))
 
 for repeat in range(EPISODES):
-    # agent_host.sendCommand('chat /kill @e[type=!minecraft:player]')
     time_start = time.time()
     my_mission = MalmoPython.MissionSpec(missionXML, True)
     my_mission_record = MalmoPython.MissionRecordSpec()
@@ -71,13 +70,12 @@ for repeat in range(EPISODES):
         for error in world_state.errors:
             print("Error:", error.text)
 
-    time.sleep(2 / time_multiplier)
+    if repeat > 0:
+        agent_host.sendCommand('chat /kill @e[type=!minecraft:player]')
+
+    time.sleep(1 / time_multiplier)
     world_state_txt = world_state.observations[-1].text
     world_state_json = json.loads(world_state_txt)
-
-    # if len(world_state_json['entities']) > 2:
-        # agent_host.sendCommand('chat /kill @e[type=Zombie,c=1]')
-    agent_host.sendCommand('chat /kill @e[type=!minecraft:player]')
 
     time.sleep(1/time_multiplier)
 
@@ -105,10 +103,6 @@ for repeat in range(EPISODES):
             print("Error:", error.text)
 
         if world_state.number_of_observations_since_last_state > 0:
-            # if zombie is dead, quit the mission and break nn loop
-            if len(world_state_json['entities']) < 2:
-                agent_host.sendCommand("quit")
-                break
 
             msg = world_state.observations[-1].text
             ob = json.loads(msg)
@@ -118,7 +112,6 @@ for repeat in range(EPISODES):
             state = steve.get_state(ob, time_alive)
 
             print(state)
-
 
             # MAIN NN LOGIC
             # check if we've seeded initial state just for the first time
