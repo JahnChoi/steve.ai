@@ -43,6 +43,7 @@ done = False
 batch_size = int(config.get('DEFAULT', 'BATCH_SIZE'))
 
 for repeat in range(EPISODES):
+    # agent_host.sendCommand('chat /kill @e[type=!minecraft:player]')
     time_start = time.time()
     my_mission = MalmoPython.MissionSpec(missionXML, True)
     my_mission_record = MalmoPython.MissionRecordSpec()
@@ -86,7 +87,7 @@ for repeat in range(EPISODES):
     x = world_state_json['XPos']
     y = world_state_json['YPos']
     z = world_state_json['ZPos']
-    agent_host.sendCommand('chat /summon zombie {} {} {}'.format(x+15, y, z))
+    agent_host.sendCommand('chat /summon zombie {} {} {}'.format(x-8, y, z))
 
     time.sleep(1/time_multiplier)
 

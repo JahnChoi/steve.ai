@@ -21,6 +21,10 @@ time_multiplier = int(config.get('DEFAULT', 'TIME_MULTIPLIER'))
     # add sleeps for discrete time
     # figure out reward structure: ++health, --health, --time
     # if zombie is dead, end loop
+    # put shield in proper slot and fix block
+    # finish overclock & pickelize result
+    # fix zombie spawn loop
+    # tweak nn
 
 
 class Steve(object):
