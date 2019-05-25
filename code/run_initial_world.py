@@ -85,7 +85,7 @@ for repeat in range(EPISODES):
     x = world_state_json['XPos']
     y = world_state_json['YPos']
     z = world_state_json['ZPos']
-    agent_host.sendCommand('chat /summon zombie {} {} {}'.format(x-8, y, z))
+    agent_host.sendCommand('chat /summon zombie {} {} {}'.format(x-4, y, z))
 
     time.sleep(1/time_multiplier)
 
