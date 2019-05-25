@@ -5,6 +5,10 @@
         <Summary>Steve.AI</Summary>
     </About>
 
+<!--    <ModSettings>-->
+<!--        <MsPerTick>25</MsPerTick>-->
+<!--    </ModSettings>-->
+
     <ServerSection>
         <ServerInitialConditions>
             <Time>
@@ -18,7 +22,7 @@
         <ServerHandlers>
             <FlatWorldGenerator generatorString="3;7,20*89;1;"/>
             <!--<DrawingDecorator>-->
-                <!--<DrawEntity x="-25.0" y="21.0" z="10" type="Zombie" pitch="0.0" xVel="0.0" yVel="0.0" zVel="0.0"/>-->
+            <!--<DrawEntity x="-25.0" y="21.0" z="10" type="Zombie" pitch="0.0" xVel="0.0" yVel="0.0" zVel="0.0"/>-->
             <!--</DrawingDecorator>-->
             <ServerQuitFromTimeUp timeLimitMs="30000"/>
             <ServerQuitWhenAnyAgentFinishes/>

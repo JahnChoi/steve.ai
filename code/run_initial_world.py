@@ -37,6 +37,7 @@ EPISODES = 5000
 
 state_size =  int(config.get('DEFAULT', 'STATE_SIZE'))
 action_size =  int(config.get('DEFAULT', 'ACTION_SIZE'))
+time_multiplier = int(config.get('DEFAULT', 'TIME_MULTIPLIER'))
 nn = DQNAgent(state_size, action_size)
 done = False
 batch_size = int(config.get('DEFAULT', 'BATCH_SIZE'))
@@ -57,25 +58,27 @@ for repeat in range(EPISODES):
                 print("Error starting mission:", e)
                 exit(1)
             else:
-                time.sleep(2)
+                time.sleep(1/time_multiplier)
 
     # Loop until mission starts:
     print("Waiting for the mission to start ", end=' ')
     world_state = agent_host.getWorldState()
     while not world_state.has_mission_begun:
         print(".", end="")
-        time.sleep(2)
+        time.sleep(2/time_multiplier)
         world_state = agent_host.getWorldState()
         for error in world_state.errors:
             print("Error:", error.text)
 
+    time.sleep(2 / time_multiplier)
     world_state_txt = world_state.observations[-1].text
     world_state_json = json.loads(world_state_txt)
+
     # if len(world_state_json['entities']) > 2:
         # agent_host.sendCommand('chat /kill @e[type=Zombie,c=1]')
     agent_host.sendCommand('chat /kill @e[type=!minecraft:player]')
 
-    time.sleep(2)
+    time.sleep(1/time_multiplier)
 
     print()
     print("Mission running ", end=' ')
@@ -85,7 +88,7 @@ for repeat in range(EPISODES):
     z = world_state_json['ZPos']
     agent_host.sendCommand('chat /summon zombie {} {} {}'.format(x+15, y, z))
 
-    time.sleep(2)
+    time.sleep(1/time_multiplier)
 
     steve = steve_agent.Steve()
     # Loop until mission ends:
@@ -95,13 +98,13 @@ for repeat in range(EPISODES):
 
     while world_state.is_mission_running:
         print(".", end="")
-        time.sleep(float(config.get('DEFAULT', 'TIME_STEP'))) # discretize time/actions
+        time.sleep(float(config.get('DEFAULT', 'TIME_STEP'))/time_multiplier) # discretize time/actions
         world_state = agent_host.getWorldState()
         for error in world_state.errors:
             print("Error:", error.text)
 
         if world_state.number_of_observations_since_last_state > 0:
-            # if zombie is dead, quit the mission and go to next
+            # if zombie is dead, quit the mission and break nn loop
             if len(world_state_json['entities']) < 2:
                 agent_host.sendCommand("quit")
                 break
@@ -125,12 +128,19 @@ for repeat in range(EPISODES):
             state = np.reshape(state, [1, state_size])
             action = nn.act(state)
             steve.perform_action(agent_host, action) # send action to malmo
-
             next_state = steve.get_state(ob, time_alive)
+
             if (repeat == 5000):
                 done = True
+                agent_host.sendCommand("quit")
             else:
                 done = False
+
+            # if zombie is dead, quit mission and break nn loop
+            if next_state[5] == 0:
+                agent_host.sendCommand("quit")
+                break
+
             reward = next_state[0] - next_state[5] - time_alive  # get reward
             print(reward)
             next_state = np.reshape(next_state, [1, state_size])

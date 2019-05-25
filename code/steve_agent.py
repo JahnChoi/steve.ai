@@ -12,6 +12,7 @@ import configparser
 
 config = configparser.ConfigParser()
 config.read('config.ini')
+time_multiplier = int(config.get('DEFAULT', 'TIME_MULTIPLIER'))
 
     # ******DISCRETE WORLD SIZE*****
     # AGENT MOVES DISCRETELY - round locations
@@ -34,7 +35,7 @@ class Steve(object):
         if (self.check_entities == False):
             return
         self.closest_enemy(agent_info, self.entities)
-        target_yaw, target_pitch = self.calcYawAndPitchToMob(self.entities[self.target], agent_info[0], agent_info[1], agent_info[2], 1.0)
+        target_yaw, target_pitch = self.calcYawAndPitchToMob(self.entities[self.target], agent_info[0], agent_info[1], agent_info[2], 0.75)
         pointing = self.lock_on(agent_host, ob, target_pitch, target_yaw, 5)
 
 
@@ -124,9 +125,8 @@ class Steve(object):
             agent_host.sendCommand("hotbar.2 1")
             agent_host.sendCommand("hotbar.2 0")
             agent_host.sendCommand("use 1")
-            time_to_block = float(config.get('DEFAULT', 'TIME_STEP'))*.75
+            time_to_block = float(config.get('DEFAULT', 'TIME_STEP'))*.75*time_multiplier
             time.sleep(time_to_block)
-            # time.sleep(1)
             agent_host.sendCommand("use 0")
 
         elif action == actions.JUMP:
