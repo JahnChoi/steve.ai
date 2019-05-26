@@ -3,6 +3,10 @@ layout: default
 title:  Status
 ---
 
+**Video Summary**:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/7KdLfg8sPq4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 **Summary**:
 
 Our goal is to train an agent in Minecraft to be efficient in combat against in game mobs. The agent will begin with a sword and shield, and will be placed in a glowstone arena surrounded by lava. The agent will utilize a deep q learning neural network to determine its next move in a given situation. We begin by training our agent against a singular mob-type, the zombie. The agent’s reward will be determined after every action by recording the agent’s health, the enemy’ health, agent position, enemy position, and the time passed since mission start. An effective agent would be classified as an agent that is able to slay the enemy quickly while also reducing the amount of damage it takes. To do this, the agent will have the option to move, strafe, jump, attack with a sword, and block with a shield.
@@ -23,7 +27,3 @@ Our current model is limited in it’s optimization. We have not done a great am
 **Resources Used**:
 
 For developing the environment our agent will be tasked in fighting in, we utilized python samples provided by Microsoft’s implementation of Malmo. We pulled examples from files such as mob_zoo.py and mob_fun.py to generate a flatworld, to equip our agent with weaponry, to spawn a zombie consistently, and to track a target consistently. For our deep q learning algorithm, we utilized Keras documentation and a tutorial provided in a blog by Keon. We examined how Keon set-up his neural network using keras and interacted with his game environment.
-
-**Video Summary**:
-
-[INSERT VIDEO]
