@@ -43,7 +43,7 @@ batch_size = int(config.get('DEFAULT', 'BATCH_SIZE'))
 KILLS = 0
 MAX_SUCCESS_RATE = 0
 
-# nn.load('ddqn-save-75percent.h5')
+# nn.load('Epsilon-0.1,Gamma-0.3,LR-0.75/ddqn-save-220episodes.h5')
 # print('MODEL LOADED')
 
 for repeat in range(EPISODES):
