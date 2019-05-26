@@ -33,16 +33,22 @@ with open('world.xml', 'r') as file:
 my_client_pool = MalmoPython.ClientPool()
 my_client_pool.add(MalmoPython.ClientInfo('127.0.0.1', 10000))
 
-EPISODES = 5000
-
+EPISODES = int(config.get('DEFAULT', 'EPISODES'))
 state_size =  int(config.get('DEFAULT', 'STATE_SIZE'))
 action_size =  int(config.get('DEFAULT', 'ACTION_SIZE'))
 time_multiplier = int(config.get('DEFAULT', 'TIME_MULTIPLIER'))
 nn = DQNAgent(state_size, action_size)
 done = False
 batch_size = int(config.get('DEFAULT', 'BATCH_SIZE'))
+KILLS = 0
+MAX_SUCCESS_RATE = 0
+
+# nn.load('ddqn-save-75percent.h5')
+# print('MODEL LOADED')
 
 for repeat in range(EPISODES):
+    print('EPISODE: ', repeat)
+
     time_start = time.time()
     my_mission = MalmoPython.MissionSpec(missionXML, True)
     my_mission_record = MalmoPython.MissionRecordSpec()
@@ -64,8 +70,6 @@ for repeat in range(EPISODES):
     print("Waiting for the mission to start ", end=' ')
     world_state = agent_host.getWorldState()
     while not world_state.has_mission_begun:
-        print(".", end="")
-        time.sleep(2/time_multiplier)
         world_state = agent_host.getWorldState()
         for error in world_state.errors:
             print("Error:", error.text)
@@ -74,6 +78,8 @@ for repeat in range(EPISODES):
         agent_host.sendCommand('chat /kill @e[type=!minecraft:player]')
 
     time.sleep(1/time_multiplier)
+    while len(world_state.observations) == 0:
+        world_state = agent_host.getWorldState()
     world_state_txt = world_state.observations[-1].text
     world_state_json = json.loads(world_state_txt)
 
@@ -82,10 +88,14 @@ for repeat in range(EPISODES):
     print()
     print("Mission running ", end=' ')
 
+    agent_host.sendCommand('chat EPISODE: {}'.format(repeat))
+    agent_host.sendCommand('chat SUCCESS RATE: {}'.format((KILLS/(repeat+1))*100))
+
     x = world_state_json['XPos']
     y = world_state_json['YPos']
     z = world_state_json['ZPos']
-    agent_host.sendCommand('chat /summon zombie {} {} {}'.format(x-4, y, z))
+    for i in range(1):
+        agent_host.sendCommand('chat /summon zombie {} {} {}'.format(x-4, y, z))
 
     time.sleep(1/time_multiplier)
 
@@ -96,7 +106,6 @@ for repeat in range(EPISODES):
     have_initial_state = 0
 
     while world_state.is_mission_running:
-        print(".", end="")
         time.sleep(float(config.get('DEFAULT', 'TIME_STEP'))/time_multiplier) # discretize time/actions
         world_state = agent_host.getWorldState()
         for error in world_state.errors:
@@ -106,12 +115,19 @@ for repeat in range(EPISODES):
 
             msg = world_state.observations[-1].text
             ob = json.loads(msg)
-            lock_on = steve.master_lock(ob, agent_host)
 
             time_alive = int(time.time() - time_start)
-            state = steve.get_state(ob, time_alive)
+            steve.get_mob_loc(ob)
+            steve.closest_enemy((ob.get(u'XPos', 0), ob.get(u'YPos', 0), ob.get(u'ZPos', 0)), steve.entities)
 
-            print(state)
+            try:
+                state = steve.get_state(ob, time_alive)
+            except KeyError:
+                KILLS += 1
+                if nn.epsilon > nn.epsilon_min:
+                    nn.epsilon *= nn.epsilon_decay
+                agent_host.sendCommand("quit")
+                break
 
             # MAIN NN LOGIC
             # check if we've seeded initial state just for the first time
@@ -122,6 +138,8 @@ for repeat in range(EPISODES):
             state = np.reshape(state, [1, state_size])
             action = nn.act(state)
             steve.perform_action(agent_host, action) # send action to malmo
+            msg = world_state.observations[-1].text
+            ob = json.loads(msg)
             next_state = steve.get_state(ob, time_alive)
 
             if (repeat == 5000):
@@ -130,11 +148,26 @@ for repeat in range(EPISODES):
                 done = False
 
             # if zombie is dead, quit mission and break nn loop
-            if next_state[5] == 0 and len(ob['entities']) < 3:
+            if next_state[4] == 0 and len(ob['entities']) < 3:
+                KILLS += 1
+                if nn.epsilon > nn.epsilon_min:
+                    nn.epsilon *= nn.epsilon_decay
                 agent_host.sendCommand("quit")
                 break
 
-            reward = next_state[0] - next_state[5] - time_alive  # get reward
+            lock_on = steve.master_lock(ob, agent_host)
+
+            if next_state[0] == 0:
+                player_bonus = -10000000
+            else:
+                player_bonus = 0
+
+            if next_state[4] == 0:
+                kill_bonus = 10000000
+            else:
+                kill_bonus = 0
+
+            reward = next_state[0]**2 - next_state[4]**5 - time_alive**2 + player_bonus + kill_bonus # get reward
             print(reward)
             next_state = np.reshape(next_state, [1, state_size])
             # reward = reward if not done else -10 ?
@@ -147,8 +180,14 @@ for repeat in range(EPISODES):
                 break
             if len(nn.memory) > batch_size:
                 nn.replay(batch_size)
+
+    if (KILLS/(repeat+1))*100 > MAX_SUCCESS_RATE:
+        MAX_SUCCESS_RATE = (KILLS/(repeat+1))*100
+        nn.save('ddqn-save.h5')
+
             # MAIN NN LOGIC
 
-    print()
+    print('SUCCESS RATE: {} / {} = {}%'.format(KILLS, repeat+1, (KILLS/(repeat+1))*100))
     print("Mission ended")
+    print()
     # Mission has ended.

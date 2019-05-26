@@ -76,15 +76,13 @@ class Steve(object):
         """gets the locations of all the entities in world state"""
         entities = {}
         for ent in ob["entities"]:
-            if (ent["name"] == "Steve.AI"):
-                continue
-            print(ent["name"])
-            mob_id = ent['id']
-            try:
-                entities[mob_id] = (ent['x'], ent['y'], ent['z'], ent['life'])
-            except:
-                entities[mob_id] = (ent['x'], ent['y'], ent['z'], 0)
-                print("key error caught")
+            if (ent["name"] == "Zombie"):
+                mob_id = ent['id']
+                try:
+                    entities[mob_id] = (ent['x'], ent['y'], ent['z'], ent['life'])
+                except:
+                    entities[mob_id] = (ent['x'], ent['y'], ent['z'], 0)
+                    print("key error caught")
         self.entities = entities
 
     def closest_enemy(self, agent, entities):
@@ -105,37 +103,53 @@ class Steve(object):
         if action == actions.MOVE_LEFT:
             print("moving left")
             agent_host.sendCommand("strafe -1")
+            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * .75
+            time.sleep(time_to_block)
             agent_host.sendCommand("strafe 0")
         elif action == actions.MOVE_RIGHT:
             print("moving right")
             agent_host.sendCommand("strafe 1")
+            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * .75
+            time.sleep(time_to_block)
             agent_host.sendCommand("strafe 0")
         elif action == actions.MOVE_FORWARD:
             print("moving forward")
             agent_host.sendCommand("move 1")
+            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * .75
+            time.sleep(time_to_block)
             agent_host.sendCommand("move 0")
         elif action == actions.MOVE_BACKWARD:
             print("moving backward")
             agent_host.sendCommand("move -1")
+            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * .75
+            time.sleep(time_to_block)
             agent_host.sendCommand("move 0")
         elif action == actions.STRIKE:
             print("striking")
             agent_host.sendCommand("hotbar.1 1")
+            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * .1
+            time.sleep(time_to_block)
             agent_host.sendCommand("hotbar.1 0")
             agent_host.sendCommand("attack 1")
+            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * .75
+            time.sleep(time_to_block)
             agent_host.sendCommand("attack 0")
         elif action == actions.BLOCK:
             print("blocking")
             agent_host.sendCommand("hotbar.2 1")
+            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * .1
+            time.sleep(time_to_block)
             agent_host.sendCommand("hotbar.2 0")
             agent_host.sendCommand("use 1")
-            time_to_block = float(config.get('DEFAULT', 'TIME_STEP'))*.75*time_multiplier
+            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP'))/time_multiplier) * .75
             time.sleep(time_to_block)
             agent_host.sendCommand("use 0")
 
         elif action == actions.JUMP:
             print("jumping")
             agent_host.sendCommand("jump 1")
+            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * .75
+            time.sleep(time_to_block)
             agent_host.sendCommand("jump 0")
         else:
             print("INVALID ACTION: " + str(action))
@@ -145,17 +159,16 @@ class Steve(object):
     def get_state(self, ob, time_alive):
         ''' 0: Life
             1: Time Alive
-            2: Mobs Killed
-            3: Agent X
-            4: Agent Z
-            5: Target Life
-            6: Target X
-            7: Target Z'''
+            2: Agent X
+            3: Agent Z
+            4: Target Life
+            5: Target X
+            6: Target Z'''
         if (self.check_entities == False):
             return
         target_health = self.entities[self.target][3]
         target_x, target_z = self.entities[self.target][0], self.entities[self.target][2]
-        return [float(round(ob["Life"])), float(time_alive), float(ob["MobsKilled"]), float(round(ob["XPos"])),
+        return [float(round(ob["Life"])), float(time_alive), float(round(ob["XPos"])),
                 float(round(ob["ZPos"])), float(round(target_health)), float(round(target_x)), 
                 float(round(target_z))]
 
