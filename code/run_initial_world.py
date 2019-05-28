@@ -11,6 +11,16 @@ import configparser
 import numpy as np
 from ddqn import DQNAgent
 
+if (sys.argv[1] not in ["zombie", "creeper", "slime", "skeleton", 
+	"spider", "enderman", "witch", "blaze"]):
+	print("Invalid args, defaulting zombie")
+	mob_type = 'zombie' 
+else:
+	mob_type = sys.argv[1]
+	print("TRAINING ON MOB: ", mob_type)
+
+
+
 config = configparser.ConfigParser()
 config.read('config.ini')
 
@@ -95,11 +105,11 @@ for repeat in range(EPISODES):
     y = world_state_json['YPos']
     z = world_state_json['ZPos']
     for i in range(1):
-        agent_host.sendCommand('chat /summon zombie {} {} {}'.format(x-4, y, z))
+        agent_host.sendCommand('chat /summon {} {} {} {}'.format(mob_type,x-4, y, z))
 
     time.sleep(1/time_multiplier)
 
-    steve = steve_agent.Steve()
+    steve = steve_agent.Steve(mob_type)
     # Loop until mission ends:
 
     # keep track if we've seeded the initial state
@@ -122,12 +132,13 @@ for repeat in range(EPISODES):
 
             try:
                 state = steve.get_state(ob, time_alive)
-            except KeyError:
-                KILLS += 1
-                if nn.epsilon > nn.epsilon_min:
-                    nn.epsilon *= nn.epsilon_decay
-                agent_host.sendCommand("quit")
-                break
+            except KeyError as k:
+            	print(k)
+            	KILLS += 1
+            	if nn.epsilon > nn.epsilon_min:
+                	nn.epsilon *= nn.epsilon_decay
+            	agent_host.sendCommand("quit")
+            	break
 
             # MAIN NN LOGIC
             # check if we've seeded initial state just for the first time
