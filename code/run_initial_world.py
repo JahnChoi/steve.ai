@@ -17,11 +17,12 @@ if (sys.argv[1] not in ["zombie", "creeper", "slime", "skeleton",
 	mob_type = 'zombie' 
 	mob_number = 1
 elif (sys.argv[1] == "mob"):
-	mob_type = 'zombie'
 	try:
-		mob_number = int(sys.argv[2])
+		mob_type = sys.argv[2]
+		mob_number = int(sys.argv[3])
 	except:
-		print("Selected Mob but invalid number of mobs. Defaulting 1")
+		print("Error in selecting mob type and number. Defaulting 1 zombie")
+		mob_type = 'zombie'
 		mob_number = 1
 else:
 	mob_type = sys.argv[1]
