@@ -12,14 +12,21 @@ import numpy as np
 from ddqn import DQNAgent
 
 if (sys.argv[1] not in ["zombie", "creeper", "slime", "skeleton", 
-	"spider", "enderman", "witch", "blaze"]):
+	"spider", "enderman", "witch", "blaze", "mob"]):
 	print("Invalid args, defaulting zombie")
 	mob_type = 'zombie' 
+	mob_number = 1
+elif (sys.argv[1] == "mob"):
+	mob_type = 'zombie'
+	try:
+		mob_number = int(sys.argv[2])
+	except:
+		print("Selected Mob but invalid number of mobs. Defaulting 1")
+		mob_number = 1
 else:
 	mob_type = sys.argv[1]
+	mob_number = 1
 	print("TRAINING ON MOB: ", mob_type)
-
-
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -104,7 +111,7 @@ for repeat in range(EPISODES):
     x = world_state_json['XPos']
     y = world_state_json['YPos']
     z = world_state_json['ZPos']
-    for i in range(1):
+    for i in range(mob_number):
         agent_host.sendCommand('chat /summon {} {} {} {}'.format(mob_type,x-4, y, z))
 
     time.sleep(1/time_multiplier)
