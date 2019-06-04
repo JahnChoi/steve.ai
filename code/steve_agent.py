@@ -2,7 +2,8 @@ import math
 from past.utils import old_div
 import actions
 import time
-
+import mob_dict
+import json
 try:
     from malmo import MalmoPython
 except:
@@ -28,8 +29,11 @@ time_multiplier = int(config.get('DEFAULT', 'TIME_MULTIPLIER'))
 
 
 class Steve(object):
-    def __init__(self):
+    def __init__(self, mob_type):
         print("creating new steve.ai")
+        self.mob_type = None
+        self.mob_height = None
+        self.set_mob_details(mob_type)
         self.target = None
         self.entities = None
 
@@ -39,7 +43,8 @@ class Steve(object):
         if (self.check_entities == False):
             return
         self.closest_enemy(agent_info, self.entities)
-        target_yaw, target_pitch = self.calcYawAndPitchToMob(self.entities[self.target], agent_info[0], agent_info[1], agent_info[2], 0.75)
+        target_yaw, target_pitch = self.calcYawAndPitchToMob(self.entities[self.target], 
+            agent_info[0], agent_info[1], agent_info[2], self.mob_height)
         pointing = self.lock_on(agent_host, ob, target_pitch, target_yaw, 5)
 
 
@@ -76,13 +81,13 @@ class Steve(object):
         """gets the locations of all the entities in world state"""
         entities = {}
         for ent in ob["entities"]:
-            if (ent["name"] == "Zombie"):
+            if (ent["name"] == self.mob_type):
                 mob_id = ent['id']
                 try:
                     entities[mob_id] = (ent['x'], ent['y'], ent['z'], ent['life'])
-                except:
+                except Exception as e :
                     entities[mob_id] = (ent['x'], ent['y'], ent['z'], 0)
-                    print("key error caught")
+                    print("Keyerror:", e)
         self.entities = entities
 
     def closest_enemy(self, agent, entities):
@@ -178,3 +183,29 @@ class Steve(object):
         elif (self.target != None and self.target not in self.entities.keys()):
             return False
         return True
+
+    def set_mob_details(self, mob_type):
+        if (mob_type == 'zombie'):
+            self.mob_type = 'Zombie'
+            self.mob_height = mob_dict.ZOMBIE
+        elif(mob_type == 'spider'):
+            self.mob_type = 'Spider'
+            self.mob_height = mob_dict.SPIDER 
+        elif(mob_type == 'creeper'):
+            self.mob_type = 'Creeper'
+            self.mob_height = mob_dict.CREEPER
+        elif(mob_type == 'skeleton'):
+            self.mob_type = 'Skeleton'
+            self.mob_height = mob_dict.SKELETON
+        elif(mob_type == 'blaze'):
+            self.mob_type = 'Blaze'
+            self.mob_height = mob_dict.BLAZE
+        elif(mob_type == 'enderman'):
+            self.mob_type = 'Enderman'
+            self.mob_height = mob_dict.ENDERMAN
+        elif(mob_type == 'slime'):
+            self.mob_type = 'Slime'
+            self.mob_height = mob_dict.SLIME
+        elif(mob_type == 'witch'):
+            self.mob_type = 'Witch'
+            self.mob_height = mob_dict.WITCH

@@ -11,6 +11,24 @@ import configparser
 import numpy as np
 from ddqn import DQNAgent
 
+if (sys.argv[1] not in ["zombie", "creeper", "slime", "skeleton", 
+	"spider", "enderman", "witch", "blaze", "mob"]):
+	print("Invalid args, defaulting zombie")
+	mob_type = 'zombie' 
+	mob_number = 1
+elif (sys.argv[1] == "mob"):
+	try:
+		mob_type = sys.argv[2]
+		mob_number = int(sys.argv[3])
+	except:
+		print("Error in selecting mob type and number. Defaulting 1 zombie")
+		mob_type = 'zombie'
+		mob_number = 1
+else:
+	mob_type = sys.argv[1]
+	mob_number = 1
+	print("TRAINING ON MOB: ", mob_type)
+
 config = configparser.ConfigParser()
 config.read('config.ini')
 
@@ -82,6 +100,9 @@ for repeat in range(EPISODES):
         world_state = agent_host.getWorldState()
     world_state_txt = world_state.observations[-1].text
     world_state_json = json.loads(world_state_txt)
+    agent_name = world_state_json['Name']
+
+    agent_host.sendCommand("chat /replaceitem entity " + agent_name + " slot.weapon.offhand minecraft:shield")
 
     time.sleep(1/time_multiplier)
 
@@ -94,12 +115,12 @@ for repeat in range(EPISODES):
     x = world_state_json['XPos']
     y = world_state_json['YPos']
     z = world_state_json['ZPos']
-    for i in range(1):
-        agent_host.sendCommand('chat /summon zombie {} {} {}'.format(x-4, y, z))
+    for i in range(mob_number):
+        agent_host.sendCommand('chat /summon {} {} {} {}'.format(mob_type,x-4, y, z))
 
     time.sleep(1/time_multiplier)
 
-    steve = steve_agent.Steve()
+    steve = steve_agent.Steve(mob_type)
     # Loop until mission ends:
 
     # keep track if we've seeded the initial state
@@ -122,12 +143,13 @@ for repeat in range(EPISODES):
 
             try:
                 state = steve.get_state(ob, time_alive)
-            except KeyError:
-                KILLS += 1
-                if nn.epsilon > nn.epsilon_min:
-                    nn.epsilon *= nn.epsilon_decay
-                agent_host.sendCommand("quit")
-                break
+            except KeyError as k:
+            	print(k)
+            	KILLS += 1
+            	if nn.epsilon > nn.epsilon_min:
+                	nn.epsilon *= nn.epsilon_decay
+            	agent_host.sendCommand("quit")
+            	break
 
             # MAIN NN LOGIC
             # check if we've seeded initial state just for the first time
