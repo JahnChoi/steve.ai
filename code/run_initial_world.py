@@ -11,23 +11,22 @@ import configparser
 import numpy as np
 from ddqn import DQNAgent
 
-if (sys.argv[1] not in ["zombie", "creeper", "slime", "skeleton", 
-	"spider", "enderman", "witch", "blaze", "mob"]):
-	print("Invalid args, defaulting zombie")
+try:
+	arg_check = sys.argv[1].lower()
+	if (arg_check not in ["zombie", "creeper", "slime", "skeleton", 
+		"spider", "enderman", "witch", "blaze"]):
+		print("Invalid mob type, defaulting to 1 zombie")
+		mob_type = 'zombie' 
+		mob_number = 1
+	else:
+		mob_type = sys.argv[1]
+		mob_number = sys.argv[2]
+		print(("TRAINING ON AGENT ON {} {}s").format(mob_number, mob_type))
+except:
+	print("Error in argument parameters. Defaulting to 1 zombie")
 	mob_type = 'zombie' 
 	mob_number = 1
-elif (sys.argv[1] == "mob"):
-	try:
-		mob_type = sys.argv[2]
-		mob_number = int(sys.argv[3])
-	except:
-		print("Error in selecting mob type and number. Defaulting 1 zombie")
-		mob_type = 'zombie'
-		mob_number = 1
-else:
-	mob_type = sys.argv[1]
-	mob_number = 1
-	print("TRAINING ON MOB: ", mob_type)
+
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -116,7 +115,7 @@ for repeat in range(EPISODES):
     y = world_state_json['YPos']
     z = world_state_json['ZPos']
     for i in range(mob_number):
-        agent_host.sendCommand('chat /summon {} {} {} {}'.format(mob_type,x-8, y, z))
+        agent_host.sendCommand('chat /summon {} {} {} {}'.format(mob_type,x-8, y, z-8+(i*2)))
 
     time.sleep(1/time_multiplier)
 
