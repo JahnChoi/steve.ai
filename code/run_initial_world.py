@@ -46,8 +46,9 @@ MAX_SUCCESS_RATE = 0
 GRAPH = live_graph.Graph()
 REWARDS_DICT = {}
 
+#command line arguments
 try:
-	arg_check = sys.argv[1].lower()
+	arg_check = sys.argv[1].lower() #using arguments from command line
 	if (arg_check not in ["zombie", "creeper", "slime", "skeleton", 
 		"spider", "enderman", "witch", "blaze"]):
 		print("Invalid mob type, defaulting to 1 zombie")
@@ -55,16 +56,30 @@ try:
 		mob_number = 1
 	else:
 		mob_type = sys.argv[1]
-		mob_number = int(sys.argv[2])
-		print(("TRAINING ON AGENT ON {} {}s").format(mob_number, mob_type))
+		if (len(sys.argv) > 2):
+			mob_number = int(sys.argv[2])
+		else:
+			mob_number = 1
+		print(("TRAINING AGENT ON {} {}(S)").format(mob_number, mob_type))
 except:
 	print("Error in argument parameters. Defaulting to 1 zombie")
 	mob_type = 'zombie' 
 	mob_number = 1
 
-# nn.load('Epsilon-0.1,Gamma-0.3,LR-0.75/ddqn-save-220episodes.h5')
-# print('MODEL LOADED')
+nn_save = "" #loading up previous save model if possible 
+if (len(sys.argv) > 3):
+	try:
+		nn_save = ("save/{}.h5").format(sys.argv[3])
+		nn.load(nn_save)
+		print("Save Model successfully imported")
+	except:
+		print("Error in loading previous save model. Training new agent")
+		nn_save = ("save/{}.h5").format(sys.argv[3])
+else:
+	nn_save = "save/ddqn-save.h5"
 
+
+#starting training loop
 for repeat in range(EPISODES):
     print('EPISODE: ', repeat)
 
@@ -208,7 +223,7 @@ for repeat in range(EPISODES):
 
     if (KILLS/(repeat+1))*100 > MAX_SUCCESS_RATE:
         MAX_SUCCESS_RATE = (KILLS/(repeat+1))*100
-        nn.save('ddqn-save.h5')
+        nn.save(nn_save)
 
             # MAIN NN LOGIC
 
