@@ -40,7 +40,7 @@
             <Placement x="2" y="23" z="0" yaw="90"/>
             <Inventory>
                 <InventoryItem slot="0" type="diamond_sword"/>
-                <InventoryItem slot="1" type="shield"/>
+                <!--<InventoryItem slot="1" type="shield"/>-->
             </Inventory>
         </AgentStart>
         <AgentHandlers>

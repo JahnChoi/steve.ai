@@ -100,6 +100,9 @@ for repeat in range(EPISODES):
         world_state = agent_host.getWorldState()
     world_state_txt = world_state.observations[-1].text
     world_state_json = json.loads(world_state_txt)
+    agent_name = world_state_json['Name']
+
+    agent_host.sendCommand("chat /replaceitem entity " + agent_name + " slot.weapon.offhand minecraft:shield")
 
     time.sleep(1/time_multiplier)
 
