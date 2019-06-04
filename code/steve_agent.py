@@ -15,18 +15,6 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 time_multiplier = int(config.get('DEFAULT', 'TIME_MULTIPLIER'))
 
-    # ******DISCRETE WORLD SIZE*****
-    # AGENT MOVES DISCRETELY - round locations
-    # ZOMBIE MOVES DISCRETELY / IS STATIONARY - round
-    # ADD ZOMBIE POSITION TO INPUTS
-    # add sleeps for discrete time
-    # figure out reward structure: ++health, --health, --time
-    # if zombie is dead, end loop
-    # put shield in proper slot and fix block
-    # finish overclock & pickelize result
-    # fix zombie spawn loop
-    # tweak nn
-
 
 class Steve(object):
     def __init__(self, mob_type):
@@ -105,55 +93,48 @@ class Steve(object):
         return math.sqrt((agent[0] - mob[0]) ** 2 + (agent[2] - mob[2]) ** 2)
 
     def perform_action(self, agent_host, action):
+        action_fraction = .9
         if action == actions.MOVE_LEFT:
             print("moving left")
             agent_host.sendCommand("strafe -1")
-            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * .75
+            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * action_fraction
             time.sleep(time_to_block)
             agent_host.sendCommand("strafe 0")
         elif action == actions.MOVE_RIGHT:
             print("moving right")
             agent_host.sendCommand("strafe 1")
-            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * .75
+            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * action_fraction
             time.sleep(time_to_block)
             agent_host.sendCommand("strafe 0")
         elif action == actions.MOVE_FORWARD:
             print("moving forward")
             agent_host.sendCommand("move 1")
-            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * .75
+            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * action_fraction
             time.sleep(time_to_block)
             agent_host.sendCommand("move 0")
         elif action == actions.MOVE_BACKWARD:
             print("moving backward")
             agent_host.sendCommand("move -1")
-            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * .75
+            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * action_fraction
             time.sleep(time_to_block)
             agent_host.sendCommand("move 0")
         elif action == actions.STRIKE:
             print("striking")
-            agent_host.sendCommand("hotbar.1 1")
-            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * .1
-            time.sleep(time_to_block)
-            agent_host.sendCommand("hotbar.1 0")
             agent_host.sendCommand("attack 1")
-            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * .75
-            time.sleep(time_to_block)
+            time_to_strike = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * action_fraction
+            time.sleep(time_to_strike)
             agent_host.sendCommand("attack 0")
         elif action == actions.BLOCK:
             print("blocking")
-            agent_host.sendCommand("hotbar.2 1")
-            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * .1
-            time.sleep(time_to_block)
-            agent_host.sendCommand("hotbar.2 0")
             agent_host.sendCommand("use 1")
-            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP'))/time_multiplier) * .75
+            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP'))/time_multiplier) * action_fraction
             time.sleep(time_to_block)
             agent_host.sendCommand("use 0")
 
         elif action == actions.JUMP:
             print("jumping")
             agent_host.sendCommand("jump 1")
-            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * .75
+            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * action_fraction
             time.sleep(time_to_block)
             agent_host.sendCommand("jump 0")
         else:

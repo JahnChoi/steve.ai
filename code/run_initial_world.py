@@ -116,7 +116,7 @@ for repeat in range(EPISODES):
     y = world_state_json['YPos']
     z = world_state_json['ZPos']
     for i in range(mob_number):
-        agent_host.sendCommand('chat /summon {} {} {} {}'.format(mob_type,x-4, y, z))
+        agent_host.sendCommand('chat /summon {} {} {} {}'.format(mob_type,x-8, y, z))
 
     time.sleep(1/time_multiplier)
 
