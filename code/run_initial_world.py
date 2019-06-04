@@ -12,23 +12,6 @@ import configparser
 import numpy as np
 from ddqn import DQNAgent
 
-try:
-	arg_check = sys.argv[1].lower()
-	if (arg_check not in ["zombie", "creeper", "slime", "skeleton", 
-		"spider", "enderman", "witch", "blaze"]):
-		print("Invalid mob type, defaulting to 1 zombie")
-		mob_type = 'zombie' 
-		mob_number = 1
-	else:
-		mob_type = sys.argv[1]
-		mob_number = sys.argv[2]
-		print(("TRAINING ON AGENT ON {} {}s").format(mob_number, mob_type))
-except:
-	print("Error in argument parameters. Defaulting to 1 zombie")
-	mob_type = 'zombie' 
-	mob_number = 1
-
-
 config = configparser.ConfigParser()
 config.read('config.ini')
 
@@ -62,6 +45,22 @@ KILLS = 0
 MAX_SUCCESS_RATE = 0
 GRAPH = live_graph.Graph()
 REWARDS_DICT = {}
+
+try:
+	arg_check = sys.argv[1].lower()
+	if (arg_check not in ["zombie", "creeper", "slime", "skeleton", 
+		"spider", "enderman", "witch", "blaze"]):
+		print("Invalid mob type, defaulting to 1 zombie")
+		mob_type = 'zombie' 
+		mob_number = 1
+	else:
+		mob_type = sys.argv[1]
+		mob_number = int(sys.argv[2])
+		print(("TRAINING ON AGENT ON {} {}s").format(mob_number, mob_type))
+except:
+	print("Error in argument parameters. Defaulting to 1 zombie")
+	mob_type = 'zombie' 
+	mob_number = 1
 
 # nn.load('Epsilon-0.1,Gamma-0.3,LR-0.75/ddqn-save-220episodes.h5')
 # print('MODEL LOADED')
