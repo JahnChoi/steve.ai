@@ -6,7 +6,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras import backend as K
-from keras.models import load_model
+from tensorflow.keras.models import load_model
 import configparser
 
 config = configparser.ConfigParser()
