@@ -53,7 +53,7 @@ try:
 	arg_check = sys.argv[1].lower() #using arguments from command line
 	if (arg_check not in ["zombie", "creeper", "slime", "skeleton", 
 		"spider", "enderman", "witch", "blaze"]):
-		print("Invalid mob type, defaulting to 1 zombie")
+		print("\nInvalid mob type, defaulting to 1 zombie")
 		mob_type = 'zombie' 
 		mob_number = 1
 	else:
@@ -62,9 +62,9 @@ try:
 			mob_number = int(sys.argv[2])
 		else:
 			mob_number = 1
-		print(("TRAINING AGENT ON {} {}(S)").format(mob_number, mob_type))
+		print(("\nTRAINING AGENT ON {} {}(S)").format(mob_number, mob_type.upper()))
 except:
-	print("Error in argument parameters. Defaulting to 1 zombie")
+	print("\nError in argument parameters. Defaulting to 1 zombie")
 	mob_type = 'zombie' 
 	mob_number = 1
 
