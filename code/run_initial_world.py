@@ -45,6 +45,8 @@ KILLS = 0
 MAX_SUCCESS_RATE = 0
 GRAPH = live_graph.Graph()
 REWARDS_DICT = {}
+ALL_REWARDS = []
+timestep = 0
 
 try:
 	arg_check = sys.argv[1].lower()
@@ -193,7 +195,9 @@ for repeat in range(EPISODES):
 
             reward = next_state[0]**2 - next_state[4]**5 - time_alive**2 + player_bonus + kill_bonus # get reward
             rewards.append(reward)
-            # print(reward)
+            ALL_REWARDS.append(reward)
+            GRAPH.animate_episode(range(0, timestep + 1), ALL_REWARDS)
+            timestep += 1
             next_state = np.reshape(next_state, [1, state_size])
             # reward = reward if not done else -10 ?
             nn.remember(state, action, reward, next_state, done)
@@ -212,9 +216,8 @@ for repeat in range(EPISODES):
 
             # MAIN NN LOGIC
 
-    print(REWARDS_DICT)
     REWARDS_DICT[repeat] = sum(rewards)/len(rewards)
-    GRAPH.animate(REWARDS_DICT.keys(), REWARDS_DICT.values())
+    GRAPH.animate(list(REWARDS_DICT.keys()), list(REWARDS_DICT.values()))
 
     print('SUCCESS RATE: {} / {} = {}%'.format(KILLS, repeat+1, (KILLS/(repeat+1))*100))
     print("Mission ended")
