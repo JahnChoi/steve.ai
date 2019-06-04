@@ -6,6 +6,7 @@ try:
 except:
     import MalmoPython
 import steve_agent
+import live_graph
 import json
 import configparser
 import numpy as np
@@ -59,6 +60,8 @@ done = False
 batch_size = int(config.get('DEFAULT', 'BATCH_SIZE'))
 KILLS = 0
 MAX_SUCCESS_RATE = 0
+GRAPH = live_graph.Graph()
+REWARDS_DICT = {}
 
 # nn.load('Epsilon-0.1,Gamma-0.3,LR-0.75/ddqn-save-220episodes.h5')
 # print('MODEL LOADED')
@@ -125,6 +128,7 @@ for repeat in range(EPISODES):
     # keep track if we've seeded the initial state
     have_initial_state = 0
 
+    rewards = []
     while world_state.is_mission_running:
         time.sleep(float(config.get('DEFAULT', 'TIME_STEP'))/time_multiplier) # discretize time/actions
         world_state = agent_host.getWorldState()
@@ -189,7 +193,8 @@ for repeat in range(EPISODES):
                 kill_bonus = 0
 
             reward = next_state[0]**2 - next_state[4]**5 - time_alive**2 + player_bonus + kill_bonus # get reward
-            print(reward)
+            rewards.append(reward)
+            # print(reward)
             next_state = np.reshape(next_state, [1, state_size])
             # reward = reward if not done else -10 ?
             nn.remember(state, action, reward, next_state, done)
@@ -207,6 +212,10 @@ for repeat in range(EPISODES):
         nn.save('ddqn-save.h5')
 
             # MAIN NN LOGIC
+
+    print(REWARDS_DICT)
+    REWARDS_DICT[repeat] = sum(rewards)/len(rewards)
+    GRAPH.animate(REWARDS_DICT.keys(), REWARDS_DICT.values())
 
     print('SUCCESS RATE: {} / {} = {}%'.format(KILLS, repeat+1, (KILLS/(repeat+1))*100))
     print("Mission ended")
