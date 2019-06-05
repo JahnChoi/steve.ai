@@ -75,8 +75,10 @@ if (len(sys.argv) > 3):
 		nn.load(nn_save)
 		print("Save Model successfully imported")
 	except:
-		print("Error in loading previous save model. Training new agent")
+		print("Save model not found. Training new agent")
 		nn_save = ("save/{}.h5").format(sys.argv[3])
+		del nn
+		nn = DQNAgent(state_size, action_size) #need to restablish nn because load failed
 else:
 	nn_save = "save/ddqn-save.h5"
 
@@ -208,7 +210,12 @@ for repeat in range(EPISODES):
             else:
                 kill_bonus = 0
 
-            reward = next_state[0]**2 - next_state[4]**5 - time_alive**2 + player_bonus + kill_bonus # get reward
+            if steve_agent.check_enemies(ob, mob_type) == 0:
+            	arena_bonus = 1000000
+            else:
+            	arena_bonus = 0
+
+            reward = next_state[0]**2 - next_state[4]**5 - time_alive**2 + player_bonus + kill_bonus + arena_bonus # get reward
             rewards.append(reward)
             ALL_REWARDS.append(reward)
             GRAPH.animate_episode(range(0, timestep + 1), ALL_REWARDS)

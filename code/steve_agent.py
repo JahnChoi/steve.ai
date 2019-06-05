@@ -18,7 +18,7 @@ time_multiplier = int(config.get('DEFAULT', 'TIME_MULTIPLIER'))
 
 class Steve(object):
     def __init__(self, mob_type):
-        print("creating new steve.ai")
+        print("creating new steve.ai placeholder")
         self.mob_type = None
         self.mob_height = None
         self.set_mob_details(mob_type)
@@ -189,3 +189,10 @@ class Steve(object):
         elif(mob_type == 'witch'):
             self.mob_type = 'Witch'
             self.mob_height = mob_dict.WITCH
+
+def check_enemies(ob, mob_type):
+    count = 0
+    for ent in ob["entities"]:
+        if (ent["name"] == mob_type):
+            count += 1
+    return count
