@@ -1,4 +1,4 @@
-![](https://i.ytimg.com/vi/HPmKuYXQrtQ/maxresdefault.jpg)
+<img src="https://i.ytimg.com/vi/HPmKuYXQrtQ/maxresdefault.jpg" width="800px">
 
 Source code repo: https://github.com/JahnChoi/JahnChoi.github.io/Steve-AI
 
