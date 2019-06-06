@@ -29,7 +29,7 @@ class Graph:
     def animate_episode(self, xs, ys):
         self.ax2.clear()
         self.ax2.plot(xs, ys)
-        self.ax2.set_title('Rewards this Episode')
+        self.ax2.set_title('Real-Time Rewards')
         self.ax2.set_xlabel('Timestep')
         self.ax2.set_ylabel('Reward')
         plt.pause(0.001)
