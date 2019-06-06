@@ -112,6 +112,9 @@ for repeat in range(EPISODES):
         for error in world_state.errors:
             print("Error:", error.text)
 
+    # Disable natural healing
+    agent_host.sendCommand('chat /gamerule naturalRegeneration false')
+
     if repeat > 0:
         agent_host.sendCommand('chat /kill @e[type=!minecraft:player]')
 
