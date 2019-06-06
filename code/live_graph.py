@@ -12,7 +12,7 @@ class Graph:
         plt.ylabel('Average Reward')
         self.fig2 = plt.figure()
         self.ax2 = self.fig2.add_subplot(1, 1, 1)
-        plt.title('Rewards this Episode')
+        plt.title('Real-Time Rewards')
         plt.xlabel('Timestep')
         plt.ylabel('Reward')
         plt.ion()

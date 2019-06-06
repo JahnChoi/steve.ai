@@ -160,7 +160,8 @@ for repeat in range(EPISODES):
 
             time_alive = int(time.time() - time_start)
             steve.get_mob_loc(ob)
-            steve.closest_enemy((ob.get(u'XPos', 0), ob.get(u'YPos', 0), ob.get(u'ZPos', 0)), steve.entities)
+            mob_loc = (ob.get(u'XPos', 0), ob.get(u'YPos', 0), ob.get(u'ZPos', 0))
+            steve.closest_enemy(mob_loc, steve.entities)
 
             try:
                 state = steve.get_state(ob, time_alive)
@@ -215,7 +216,9 @@ for repeat in range(EPISODES):
             else:
             	arena_bonus = 0
 
-            reward = next_state[0]**2 - next_state[4]**5 - time_alive**2 + player_bonus + kill_bonus + arena_bonus # get reward
+
+            agent_loc = (ob.get(u'XPos', 0), ob.get(u'YPos', 0), ob.get(u'ZPos', 0))
+            reward = next_state[0]**2 - next_state[4]**5 - time_alive**2 + player_bonus + kill_bonus + arena_bonus - (steve.calculate_distance(agent_loc, mob_loc)+3)**2 # get reward
             rewards.append(reward)
             ALL_REWARDS.append(reward)
             GRAPH.animate_episode(range(0, timestep + 1), ALL_REWARDS)
