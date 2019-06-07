@@ -86,6 +86,8 @@ else:
 #starting training loop
 for repeat in range(EPISODES):
     print('EPISODE: ', repeat)
+    print("episode: {}/{}, score: {}, e: {:.2}"
+          .format(repeat, EPISODES, time, nn.epsilon))
 
     time_start = time.time()
     my_mission = MalmoPython.MissionSpec(missionXML, True)
@@ -205,23 +207,23 @@ for repeat in range(EPISODES):
             lock_on = steve.master_lock(ob, agent_host)
 
             if next_state[0] == 0:
-                player_bonus = -10
+                player_bonus = -100
             else:
                 player_bonus = 0
 
             if next_state[4] == 0:
-                kill_bonus = 100
+                kill_bonus = 400
             else:
                 kill_bonus = 0
 
             if steve_agent.check_enemies(ob, mob_type) == 0:
-            	arena_bonus = 500
+            	arena_bonus = 1000
             else:
             	arena_bonus = 0
 
 
             agent_loc = (ob.get(u'XPos', 0), ob.get(u'YPos', 0), ob.get(u'ZPos', 0))
-            reward = next_state[0]*2 - next_state[4]*5 - time_alive*2 + player_bonus + kill_bonus + arena_bonus - (steve.calculate_distance(agent_loc, mob_loc)+3)*100 # get reward
+            reward = next_state[0]*10 - next_state[4]*40 - time_alive*4 + player_bonus + kill_bonus + arena_bonus - (steve.calculate_distance(agent_loc, mob_loc)+3)*10 # get reward
             rewards.append(reward)
             ALL_REWARDS.append(reward)
             GRAPH.animate_episode(range(0, timestep + 1), ALL_REWARDS)

@@ -20,7 +20,7 @@ class DQNAgent:
     def __init__(self, state_size, action_size):
         self.state_size = state_size
         self.action_size = action_size
-        self.memory = deque(maxlen=2000)
+        self.memory = deque(maxlen=5000)
         self.gamma = float(config.get('DEFAULT', 'GAMMA'))  # discount rate
         self.epsilon = float(config.get('DEFAULT', 'EPSILON'))  # exploration rate
         self.epsilon_min = float(config.get('DEFAULT', 'EPSILON_MIN'))
@@ -48,9 +48,9 @@ class DQNAgent:
     def _build_model(self):
         # Neural Net for Deep-Q learning Model
         model = Sequential()
-        model.add(Dense(12, input_dim=self.state_size, activation='relu'))
-        for i in range(3):
-            model.add(Dense(12, activation='relu'))
+        model.add(Dense(7, input_dim=self.state_size, activation='relu'))
+        for i in range(2):
+            model.add(Dense(7, activation='relu'))
         model.add(Dense(self.action_size, activation='linear'))
         model.compile(loss=self._huber_loss,
                       optimizer=Adam(lr=self.learning_rate))
