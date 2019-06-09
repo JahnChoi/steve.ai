@@ -116,7 +116,7 @@ class Steve(object):
             # print("moving backward")
             agent_host.sendCommand("move 0")
             agent_host.sendCommand("strafe 0")
-            agent_host.sendCommand("move .5")
+            agent_host.sendCommand("move -.5")
             time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * action_fraction
            # time.sleep(time_to_block)
         elif action == actions.STRIKE:
