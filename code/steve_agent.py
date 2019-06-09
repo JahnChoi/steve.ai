@@ -28,12 +28,13 @@ class Steve(object):
     def master_lock(self, ob, agent_host):
         agent_info = (ob.get(u'XPos', 0), ob.get(u'YPos', 0), ob.get(u'ZPos', 0))
         self.get_mob_loc(ob)
-        if (self.check_entities == False):
-            return
         self.closest_enemy(agent_info, self.entities)
+        if (self.check_entities() == False):
+            return False
         target_yaw, target_pitch = self.calcYawAndPitchToMob(self.entities[self.target], 
             agent_info[0], agent_info[1], agent_info[2], self.mob_height)
-        pointing = self.lock_on(agent_host, ob, target_pitch, target_yaw, 5)
+        pointing = self.lock_on(agent_host, ob, target_pitch, target_yaw, 3)
+        return True
 
 
     def lock_on(self, agent_host, ob, target_pitch, target_yaw, threshhold):
@@ -41,12 +42,12 @@ class Steve(object):
         yaw = ob.get(u'Yaw', 0)
         delta_yaw = self.angvel(target_yaw, yaw, 25.0)
         delta_pitch = self.angvel(target_pitch, pitch, 25.0)
-        agent_host.sendCommand("turn " + str(delta_yaw/time_multiplier))
-        agent_host.sendCommand("pitch " + str(delta_pitch/time_multiplier))
-        # if abs(pitch - target_pitch) + abs(yaw - target_yaw) < threshhold:
-        #     agent_host.sendCommand("turn 0")
-        #     agent_host.sendCommand("pitch 0")
-        #     return True
+        agent_host.sendCommand("turn " + str(delta_yaw/(time_multiplier)))
+        agent_host.sendCommand("pitch " + str(delta_pitch/(time_multiplier)))
+        #if abs(pitch - target_pitch) + abs(yaw - target_yaw) < threshhold:
+           #  agent_host.sendCommand("turn 0")
+            # agent_host.sendCommand("pitch 0")
+            # return True
         return False
 
     def angvel(self, target, current, scale):
@@ -71,11 +72,7 @@ class Steve(object):
         for ent in ob["entities"]:
             if (ent["name"] == self.mob_type):
                 mob_id = ent['id']
-                try:
-                    entities[mob_id] = (ent['x'], ent['y'], ent['z'], ent['life'])
-                except Exception as e :
-                    entities[mob_id] = (ent['x'], ent['y'], ent['z'], 0)
-                    print("Keyerror:", e)
+                entities[mob_id] = (ent['x'], ent['y'], ent['z'], ent['life'])
         self.entities = entities
 
     def closest_enemy(self, agent, entities):
@@ -96,28 +93,32 @@ class Steve(object):
         action_fraction = .9
         if action == actions.MOVE_LEFT:
             # print("moving left")
-            agent_host.sendCommand("strafe -1")
-            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * action_fraction
-            time.sleep(time_to_block)
+            agent_host.sendCommand("move 0")
             agent_host.sendCommand("strafe 0")
+            agent_host.sendCommand("strafe -.5")
+            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * action_fraction
+            #time.sleep(time_to_block)
         elif action == actions.MOVE_RIGHT:
             # print("moving right")
-            agent_host.sendCommand("strafe 1")
-            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * action_fraction
-            time.sleep(time_to_block)
+            agent_host.sendCommand("move 0")
             agent_host.sendCommand("strafe 0")
+            agent_host.sendCommand("strafe .5")
+            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * action_fraction
+            #time.sleep(time_to_block)
         elif action == actions.MOVE_FORWARD:
             # print("moving forward")
-            agent_host.sendCommand("move 1")
-            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * action_fraction
-            time.sleep(time_to_block)
             agent_host.sendCommand("move 0")
+            agent_host.sendCommand("strafe 0")
+            agent_host.sendCommand("move .5")
+            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * action_fraction
+            #time.sleep(time_to_block)
         elif action == actions.MOVE_BACKWARD:
             # print("moving backward")
-            agent_host.sendCommand("move -1")
-            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * action_fraction
-            time.sleep(time_to_block)
             agent_host.sendCommand("move 0")
+            agent_host.sendCommand("strafe 0")
+            agent_host.sendCommand("move .5")
+            time_to_block = (float(config.get('DEFAULT', 'TIME_STEP')) / time_multiplier) * action_fraction
+           # time.sleep(time_to_block)
         elif action == actions.STRIKE:
             # print("striking")
             agent_host.sendCommand("attack 1")
@@ -146,19 +147,21 @@ class Steve(object):
             1: Time Alive
             2: Agent X
             3: Agent Z
-            4: Target Life
+            4: Horde_health
             5: Target X
             6: Target Z'''
-        if (self.check_entities == False):
-            return
-        target_health = self.entities[self.target][3]
+        if (self.check_entities() == False):
+            agent_info = (ob.get(u'XPos', 0), ob.get(u'YPos', 0), ob.get(u'ZPos', 0))
+            steve.get_mob_loc()
+            steve.closest_enemy(agent_info, steve.entities)
+        horde = self.horde_health()
         target_x, target_z = self.entities[self.target][0], self.entities[self.target][2]
         return [float(round(ob["Life"])), float(time_alive), float(round(ob["XPos"])),
-                float(round(ob["ZPos"])), float(round(target_health)), float(round(target_x)), 
+                float(round(ob["ZPos"])), float(round(horde)), float(round(target_x)), 
                 float(round(target_z))]
 
     def check_entities(self):
-        if (len(self.entities) < 1):
+        if (len(self.entities.keys()) < 1):
             return False
         elif (self.target != None and self.target not in self.entities.keys()):
             return False
@@ -171,28 +174,12 @@ class Steve(object):
         elif(mob_type == 'spider'):
             self.mob_type = 'Spider'
             self.mob_height = mob_dict.SPIDER 
-        elif(mob_type == 'creeper'):
-            self.mob_type = 'Creeper'
-            self.mob_height = mob_dict.CREEPER
         elif(mob_type == 'skeleton'):
             self.mob_type = 'Skeleton'
             self.mob_height = mob_dict.SKELETON
-        elif(mob_type == 'blaze'):
-            self.mob_type = 'Blaze'
-            self.mob_height = mob_dict.BLAZE
-        elif(mob_type == 'enderman'):
-            self.mob_type = 'Enderman'
-            self.mob_height = mob_dict.ENDERMAN
-        elif(mob_type == 'slime'):
-            self.mob_type = 'Slime'
-            self.mob_height = mob_dict.SLIME
-        elif(mob_type == 'witch'):
-            self.mob_type = 'Witch'
-            self.mob_height = mob_dict.WITCH
 
-def check_enemies(ob, mob_type):
-    count = 0
-    for ent in ob["entities"]:
-        if (ent["name"] == mob_type):
-            count += 1
-    return count
+    def horde_health(self):
+        res = 0
+        for mob in self.entities.keys():
+            res += self.entities[mob][3]
+        return res

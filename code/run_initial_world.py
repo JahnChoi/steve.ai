@@ -41,7 +41,7 @@ time_multiplier = int(config.get('DEFAULT', 'TIME_MULTIPLIER'))
 nn = DQNAgent(state_size, action_size)
 done = False
 batch_size = int(config.get('DEFAULT', 'BATCH_SIZE'))
-KILLS = 0
+CLEARS = 0
 MAX_SUCCESS_RATE = 0
 GRAPH = live_graph.Graph()
 REWARDS_DICT = {}
@@ -51,8 +51,7 @@ timestep = 0
 #command line arguments
 try:
 	arg_check = sys.argv[1].lower() #using arguments from command line
-	if (arg_check not in ["zombie", "creeper", "slime", "skeleton", 
-		"spider", "enderman", "witch", "blaze"]):
+	if (arg_check not in ["zombie", "skeleton", "spider"]):
 		print("\nInvalid mob type, defaulting to 1 zombie")
 		mob_type = 'zombie' 
 		mob_number = 1
@@ -112,7 +111,7 @@ for repeat in range(EPISODES):
     while not world_state.has_mission_begun:
         world_state = agent_host.getWorldState()
         for error in world_state.errors:
-            print("Error:", error.text)
+            print("Starting Mission Error:", error.text)
 
     # Disable natural healing
     agent_host.sendCommand('chat /gamerule naturalRegeneration false')
@@ -135,7 +134,7 @@ for repeat in range(EPISODES):
     print("Mission running ", end=' ')
 
     agent_host.sendCommand('chat EPISODE: {}'.format(repeat))
-    agent_host.sendCommand('chat SUCCESS RATE: {}'.format((KILLS/(repeat+1))*100))
+    agent_host.sendCommand('chat SUCCESS RATE: {}'.format((CLEARS/(repeat+1))*100))
 
     x = world_state_json['XPos']
     y = world_state_json['YPos']
@@ -151,28 +150,26 @@ for repeat in range(EPISODES):
     # keep track if we've seeded the initial state
     have_initial_state = 0
 
+    mobs_left = mob_number
     rewards = []
     while world_state.is_mission_running:
         time.sleep(float(config.get('DEFAULT', 'TIME_STEP'))/time_multiplier) # discretize time/actions
         world_state = agent_host.getWorldState()
         for error in world_state.errors:
-            print("Error:", error.text)
+            print("World State Error:", error.text)
 
         if world_state.number_of_observations_since_last_state > 0:
 
             msg = world_state.observations[-1].text
             ob = json.loads(msg)
-
             time_alive = int(time.time() - time_start)
-            steve.get_mob_loc(ob)
-            mob_loc = (ob.get(u'XPos', 0), ob.get(u'YPos', 0), ob.get(u'ZPos', 0))
-            steve.closest_enemy(mob_loc, steve.entities)
+            lock_on = steve.master_lock(ob, agent_host)
 
             try:
                 state = steve.get_state(ob, time_alive)
             except KeyError as k:
-            	print(k)
-            	KILLS += 1
+            	print("Key Error:", k)
+            	CLEARS += 1
             	if nn.epsilon > nn.epsilon_min:
                 	nn.epsilon *= nn.epsilon_decay
             	agent_host.sendCommand("quit")
@@ -189,6 +186,7 @@ for repeat in range(EPISODES):
             steve.perform_action(agent_host, action) # send action to malmo
             msg = world_state.observations[-1].text
             ob = json.loads(msg)
+            steve.get_mob_loc(ob) #update entities in steve
             next_state = steve.get_state(ob, time_alive)
 
             if (repeat == 5000):
@@ -196,52 +194,53 @@ for repeat in range(EPISODES):
             else:
                 done = False
 
-            # if zombie is dead, quit mission and break nn loop
-            if next_state[4] == 0 and len(ob['entities']) < 3:
-                KILLS += 1
-                if nn.epsilon > nn.epsilon_min:
-                    nn.epsilon *= nn.epsilon_decay
-                agent_host.sendCommand("quit")
-                break
-
             lock_on = steve.master_lock(ob, agent_host)
 
-            if next_state[0] == 0:
-                player_bonus = -100
+            if next_state[0] == 0: #steve dying
+                player_bonus = -500
             else:
                 player_bonus = 0
 
-            if next_state[4] == 0:
-                kill_bonus = 400
+            if (len(steve.entities.keys()) < mobs_left): #steve getting kills
+            	kill_bonus = 400 #this method does not work, need a new method
+            	mobs_left -= 1
             else:
                 kill_bonus = 0
 
-            if steve_agent.check_enemies(ob, mob_type) == 0:
-            	arena_bonus = 1000
+            if next_state[4] == 0: #steve clearing arena
+            	arena_bonus = 500
+            	CLEARS += 1
+            	if nn.epsilon > nn.epsilon_min:
+                    nn.epsilon *= nn.epsilon_decay
             else:
             	arena_bonus = 0
 
-
-            agent_loc = (ob.get(u'XPos', 0), ob.get(u'YPos', 0), ob.get(u'ZPos', 0))
-            reward = next_state[0]*10 - next_state[4]*40 - time_alive*4 + player_bonus + kill_bonus + arena_bonus - (steve.calculate_distance(agent_loc, mob_loc)+3)*10 # get reward
+            steve_loc = (next_state[2], 0, next_state[3])
+            mob_distance=(steve.calculate_distance(steve_loc, steve.entities[steve.target])+3)
+            reward = ((next_state[0]*10) - (next_state[4]*22) - (time_alive*4) + player_bonus + 
+            kill_bonus + arena_bonus - (mob_distance*5)) # get reward
+        
             rewards.append(reward)
             ALL_REWARDS.append(reward)
             GRAPH.animate_episode(range(0, timestep + 1), ALL_REWARDS)
             timestep += 1
             next_state = np.reshape(next_state, [1, state_size])
-            # reward = reward if not done else -10 ?
             nn.remember(state, action, reward, next_state, done)
             state = next_state
             if done:
+                print("DONE TRIGGERED")
                 nn.update_target_model()
                 print("episode: {}/{}, score: {}, e: {:.2}"
                       .format(repeat, EPISODES, time, nn.epsilon))
                 break
-            if len(nn.memory) > batch_size:
+            if len(nn.memory) > batch_size: #it will decay eps
                 nn.replay(batch_size)
+            if (arena_bonus != 0): #just some quick spaghetti to get us out of NN loop after cleared arena hehe
+            	agent_host.sendCommand("quit")
+            	break
 
-    if (KILLS/(repeat+1))*100 > MAX_SUCCESS_RATE:
-        MAX_SUCCESS_RATE = (KILLS/(repeat+1))*100
+    if (CLEARS/(repeat+1))*100 > MAX_SUCCESS_RATE:
+        MAX_SUCCESS_RATE = (CLEARS/(repeat+1))*100
         nn.save(nn_save)
 
             # MAIN NN LOGIC
@@ -249,7 +248,7 @@ for repeat in range(EPISODES):
     REWARDS_DICT[repeat] = sum(rewards)/len(rewards)
     GRAPH.animate(list(REWARDS_DICT.keys()), list(REWARDS_DICT.values()))
 
-    print('SUCCESS RATE: {} / {} = {}%'.format(KILLS, repeat+1, (KILLS/(repeat+1))*100))
+    print('SUCCESS RATE: {} / {} = {}%'.format(CLEARS, repeat+1, (CLEARS/(repeat+1))*100))
     print("Mission ended")
     print()
     # Mission has ended.
