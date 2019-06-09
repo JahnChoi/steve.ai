@@ -16,6 +16,18 @@ EPISODES = config.get('DEFAULT', 'EPISODES')
 import tensorflow as tf
 
 
+# def _huber_loss(y_true, y_pred, clip_delta=1.0):
+#     error = y_true - y_pred
+#     cond = K.abs(error) <= clip_delta
+#
+#     squared_loss = 0.5 * K.square(error)
+#     quadratic_loss = 0.5 * K.square(clip_delta) + clip_delta * (K.abs(error) - clip_delta)
+#
+#     return K.mean(tf.where(cond, squared_loss, quadratic_loss))
+#
+# import tensorflow.keras.losses
+# tensorflow.keras.losses._huber_loss = _huber_loss
+
 class DQNAgent:
     def __init__(self, state_size, action_size):
         self.state_size = state_size
@@ -85,7 +97,7 @@ class DQNAgent:
             self.epsilon *= self.epsilon_decay
 
     def load(self, name):
-        self.model = load_model(name)
+        self.model = load_model(name, custom_objects={'_huber_loss': self._huber_loss})
 
     def save(self, name):
         self.model.save(name)
