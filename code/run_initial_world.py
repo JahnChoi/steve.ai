@@ -204,6 +204,8 @@ for repeat in range(EPISODES):
             if (len(steve.entities.keys()) < mobs_left): #steve getting kills
                 kill_bonus = 400 #this method does not work, need a new method
                 mobs_left -= 1
+                if nn.epsilon > nn.epsilon_min:
+                    nn.epsilon *= nn.epsilon_decay
             else:
                 kill_bonus = 0
 
@@ -217,7 +219,7 @@ for repeat in range(EPISODES):
 
             steve_loc = (next_state[2], 0, next_state[3])
             mob_distance=(steve.calculate_distance(steve_loc, steve.entities[steve.target])+3)
-            reward = ((next_state[0]*10) - (next_state[4]*100) - (time_alive*4) + player_bonus +
+            reward = ((next_state[0]*20) - (next_state[4]*200) - (time_alive*4) + player_bonus +
             kill_bonus + arena_bonus - (mob_distance*5)) # get reward
         
             rewards.append(reward)

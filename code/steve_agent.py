@@ -63,7 +63,7 @@ class Steve(object):
         dz = target[2] - z
         yaw = -180 * math.atan2(dx, dz) / math.pi
         distance = math.sqrt(dx * dx + dz * dz)
-        pitch = math.atan2(((y + 1.625) - (target[1] + target_height * 0.9)), distance) * 180.0 / math.pi
+        pitch = math.atan2(((y + 1.625) - (target[1] + target_height * 1.5)), distance) * 180.0 / math.pi
         return yaw, pitch
 
     def get_mob_loc(self, ob):
