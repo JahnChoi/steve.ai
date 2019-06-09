@@ -245,8 +245,8 @@ for repeat in range(EPISODES):
                 agent_host.sendCommand("quit")
                 break
 
-    if (CLEARS / (repeat + 1)) * 100 > MAX_SUCCESS_RATE:
-        MAX_SUCCESS_RATE = (CLEARS / (repeat + 1)) * 100
+    if repeat % 10 == 0:
+        print('Saving file to {}'.format(nn_save))
         nn.save(nn_save)
 
         # MAIN NN LOGIC
