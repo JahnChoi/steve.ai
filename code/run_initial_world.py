@@ -79,7 +79,7 @@ if (len(sys.argv) > 3):
 		del nn
 		nn = DQNAgent(state_size, action_size) #need to restablish nn because load failed
 else:
-	nn_save = "save/ddqn-save.h5"
+	nn_save = "save/ddqn-status-defaults-save.h5"
 
 
 #starting training loop

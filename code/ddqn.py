@@ -20,7 +20,7 @@ class DQNAgent:
     def __init__(self, state_size, action_size):
         self.state_size = state_size
         self.action_size = action_size
-        self.memory = deque(maxlen=4000)
+        self.memory = deque(maxlen=2000)
         self.gamma = float(config.get('DEFAULT', 'GAMMA'))  # discount rate
         self.epsilon = float(config.get('DEFAULT', 'EPSILON'))  # exploration rate
         self.epsilon_min = float(config.get('DEFAULT', 'EPSILON_MIN'))
@@ -48,9 +48,9 @@ class DQNAgent:
     def _build_model(self):
         # Neural Net for Deep-Q learning Model
         model = Sequential()
-        model.add(Dense(14, input_dim=self.state_size, activation='relu'))
-        for i in range(4):
-            model.add(Dense(14, activation='relu'))
+        model.add(Dense(24, input_dim=self.state_size, activation='relu'))
+        for i in range(3):
+            model.add(Dense(24, activation='relu'))
         model.add(Dense(self.action_size, activation='linear'))
         model.compile(loss=self._huber_loss,
                       optimizer=Adam(lr=self.learning_rate))
@@ -85,7 +85,7 @@ class DQNAgent:
             self.epsilon *= self.epsilon_decay
 
     def load(self, name):
-        self.model.load_weights(name)
+        self.model = load_model(name)
 
     def save(self, name):
-        self.model.save_weights(name)
+        self.model.save(name)

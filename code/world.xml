@@ -29,7 +29,7 @@
                 <DrawCuboid x1="-20" y1="20" z1="-20" x2="20" y2="20" z2="20" type="lava" />
                 <DrawCuboid x1="-10" y1="20" z1="-10" x2="10" y2="20" z2="10" type="bedrock" />
             </DrawingDecorator>
-            <ServerQuitFromTimeUp timeLimitMs="30000"/>
+            <ServerQuitFromTimeUp timeLimitMs="40000"/>
             <ServerQuitWhenAnyAgentFinishes/>
         </ServerHandlers>
     </ServerSection>
