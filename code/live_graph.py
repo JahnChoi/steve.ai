@@ -5,12 +5,12 @@ plt.style.use('ggplot')
 
 class Graph:
     def __init__(self):
-        self.fig = plt.figure()
+        self.fig = plt.figure(figsize=(6, 3))
         self.ax = self.fig.add_subplot(1, 1, 1)
         plt.title('Average Reward per Episode')
         plt.xlabel('Episode')
         plt.ylabel('Average Reward')
-        self.fig2 = plt.figure()
+        self.fig2 = plt.figure(figsize=(6, 3))
         self.ax2 = self.fig2.add_subplot(1, 1, 1)
         plt.title('Real-Time Rewards')
         plt.xlabel('Timestep')
