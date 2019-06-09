@@ -44,10 +44,10 @@ class Steve(object):
         delta_pitch = self.angvel(target_pitch, pitch, 25.0)
         agent_host.sendCommand("turn " + str(delta_yaw/(time_multiplier)))
         agent_host.sendCommand("pitch " + str(delta_pitch/(time_multiplier)))
-        #if abs(pitch - target_pitch) + abs(yaw - target_yaw) < threshhold:
-           #  agent_host.sendCommand("turn 0")
-            # agent_host.sendCommand("pitch 0")
-            # return True
+        # if abs(pitch - target_pitch) + abs(yaw - target_yaw) < threshhold:
+        #     agent_host.sendCommand("turn 0")
+        #     agent_host.sendCommand("pitch 0")
+        #     return True
         return False
 
     def angvel(self, target, current, scale):
@@ -72,7 +72,7 @@ class Steve(object):
         for ent in ob["entities"]:
             if (ent["name"] == self.mob_type):
                 mob_id = ent['id']
-                entities[mob_id] = (ent['x'], ent['y'], ent['z'], ent['life'])
+                entities[mob_id] = (ent['x'], ent['y'], ent['z'], ent['life'], ent['motionX'], ent['motionZ'])
         self.entities = entities
 
     def closest_enemy(self, agent, entities):
