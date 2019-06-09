@@ -152,8 +152,8 @@ class Steve(object):
             6: Target Z'''
         if (self.check_entities() == False):
             agent_info = (ob.get(u'XPos', 0), ob.get(u'YPos', 0), ob.get(u'ZPos', 0))
-            steve.get_mob_loc()
-            steve.closest_enemy(agent_info, steve.entities)
+            self.get_mob_loc(ob)
+            self.closest_enemy(agent_info, self.entities)
         horde = self.horde_health()
         target_x, target_z = self.entities[self.target][0], self.entities[self.target][2]
         return [float(round(ob["Life"])), float(time_alive), float(round(ob["XPos"])),

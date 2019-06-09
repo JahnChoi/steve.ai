@@ -40,10 +40,10 @@
             <Placement x="2" y="23" z="0" yaw="90"/>
             <Inventory>
                 <InventoryItem slot="0" type="diamond_sword"/>
-                <!--<InventoryItem slot="100" type="iron_boots"/>-->
-                <!--<InventoryItem slot="101" type="iron_leggings"/>-->
-                <!--<InventoryItem slot="102" type="iron_chestplate"/>-->
-                <!--<InventoryItem slot="103" type="iron_helmet"/>-->
+                <InventoryItem slot="36" type="iron_boots"/>
+                <InventoryItem slot="37" type="iron_leggings"/>
+                <InventoryItem slot="38" type="iron_chestplate"/>
+                <InventoryItem slot="39" type="iron_helmet"/>
             </Inventory>
         </AgentStart>
         <AgentHandlers>

@@ -51,7 +51,7 @@ timestep = 0
 #command line arguments
 try:
 	arg_check = sys.argv[1].lower() #using arguments from command line
-	if (arg_check not in ["zombie", "skeleton", "spider"]):
+	if (arg_check not in ["zombie", "skeleton", "spider", "giant"]):
 		print("\nInvalid mob type, defaulting to 1 zombie")
 		mob_type = 'zombie' 
 		mob_number = 1
@@ -140,7 +140,7 @@ for repeat in range(EPISODES):
     y = world_state_json['YPos']
     z = world_state_json['ZPos']
     for i in range(mob_number):
-        agent_host.sendCommand('chat /summon {} {} {} {}'.format(mob_type,x-8, y, z-8+(i*2)))
+        agent_host.sendCommand('chat /summon {} {} {} {}'.format(mob_type, x-8, y, z-8+(i*2)))
 
     time.sleep(1/time_multiplier)
 
@@ -202,7 +202,6 @@ for repeat in range(EPISODES):
                 player_bonus = 0
 
             if (len(steve.entities.keys()) < mobs_left): #steve getting kills
-                print('KILL BONUS GRANTED')
                 kill_bonus = 400 #this method does not work, need a new method
                 mobs_left -= 1
             else:
