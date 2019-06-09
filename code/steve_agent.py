@@ -177,6 +177,9 @@ class Steve(object):
         elif(mob_type == 'skeleton'):
             self.mob_type = 'Skeleton'
             self.mob_height = mob_dict.SKELETON
+        elif(mob_type == 'giant'):
+            self.mob_type = 'Giant'
+            self.mob_height = mob_dict.GIANT
 
     def horde_health(self):
         res = 0

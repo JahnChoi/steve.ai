@@ -140,7 +140,10 @@ for repeat in range(EPISODES):
     y = world_state_json['YPos']
     z = world_state_json['ZPos']
     for i in range(mob_number):
-        agent_host.sendCommand('chat /summon {} {} {} {}'.format(mob_type, x-8, y, z-8+(i*2)))
+        spawn_command = 'chat /summon {} {} {} {}'.format(mob_type, x - 8, y, z - 8 + (i * 2))
+        if mob_type == 'zombie':
+            spawn_command += ' {IsBaby:0}'
+        agent_host.sendCommand(spawn_command)
 
     time.sleep(1/time_multiplier)
 
