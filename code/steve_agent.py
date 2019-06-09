@@ -42,8 +42,8 @@ class Steve(object):
         yaw = ob.get(u'Yaw', 0)
         delta_yaw = self.angvel(target_yaw, yaw, 25.0)
         delta_pitch = self.angvel(target_pitch, pitch, 25.0)
-        agent_host.sendCommand("turn " + str(delta_yaw/(time_multiplier)))
-        agent_host.sendCommand("pitch " + str(delta_pitch/(time_multiplier)))
+        agent_host.sendCommand("turn " + str(delta_yaw/(time_multiplier)*1.5))
+        agent_host.sendCommand("pitch " + str(delta_pitch/(time_multiplier)*1.5))
         # if abs(pitch - target_pitch) + abs(yaw - target_yaw) < threshhold:
         #     agent_host.sendCommand("turn 0")
         #     agent_host.sendCommand("pitch 0")
