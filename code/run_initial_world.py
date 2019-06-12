@@ -83,6 +83,7 @@ else:
 
 # starting training loop
 for repeat in range(EPISODES):
+    kill_bonus = 0
     print('EPISODE: ', repeat)
     print("episode: {}/{}, score: {}, e: {:.2}"
           .format(repeat, EPISODES, time, nn.epsilon))
@@ -199,20 +200,23 @@ for repeat in range(EPISODES):
             lock_on = steve.master_lock(ob, agent_host)
 
             if next_state[0] == 0:  # steve dying
-                player_bonus = -500
+                # player_bonus = -500
+                player_bonus = -50000
             else:
                 player_bonus = 0
 
             if (len(steve.entities.keys()) < mobs_left):  # steve getting kills
-                kill_bonus = 400  # this method does not work, need a new method
+                # kill_bonus = 400  # this method does not work, need a new method
+                kill_bonus += 5000  # this method does not work, need a new method
                 mobs_left -= 1
                 if nn.epsilon > nn.epsilon_min:
                     nn.epsilon *= nn.epsilon_decay
             else:
-                kill_bonus = 0
-
+                # kill_bonus = 0
+                pass
             if next_state[4] == 0:  # steve clearing arena
-                arena_bonus = 500
+                # arena_bonus = 500
+                arena_bonus = 5000
                 CLEARS += 1
                 if nn.epsilon > nn.epsilon_min:
                     nn.epsilon *= nn.epsilon_decay
@@ -221,8 +225,11 @@ for repeat in range(EPISODES):
 
             steve_loc = (next_state[2], 0, next_state[3])
             mob_distance = (steve.calculate_distance(steve_loc, steve.entities[steve.target]) + 3)
-            reward = ((next_state[0] * 20) - (next_state[4] * 200) - (time_alive * 4) + player_bonus +
-                      kill_bonus + arena_bonus - (mob_distance * 5))  # get reward
+            # reward = ((next_state[0] * 20) - (next_state[4] * 200) - (time_alive * 4) + player_bonus +
+            #           kill_bonus + arena_bonus - (mob_distance * 5))  # get reward
+
+            reward = (((next_state[0]**2)*5) - ((next_state[4]**2)*5) - (time_alive**3) + player_bonus +
+                      kill_bonus + arena_bonus - (mob_distance**3))  # get reward
 
             rewards.append(reward)
             ALL_REWARDS.append(reward)
