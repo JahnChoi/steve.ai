@@ -38,4 +38,7 @@ code {
   font-size: 80%;
 }
 
-img[alt=Hyperparameters] { width: 200px; }
+img[alt=Hyperparameters] {
+    text-align: center;
+    width: 200px;
+}
