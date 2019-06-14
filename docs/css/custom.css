@@ -37,3 +37,5 @@ body > .container {
 code {
   font-size: 80%;
 }
+
+img[alt=Hyperparameters] { width: 200px; }

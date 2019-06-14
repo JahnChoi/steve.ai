@@ -25,16 +25,20 @@ Once the selected action has been performed on the environment, the agent polls 
 Our configuration for the neural network includes the following hyperparameters:
 
 ![Hyperparameters](assets/hyperparameters.png)
+*Hyperparameters Used For the Model*
 
 Our model generally starts to see success around episode 50-100 and is considered well trained around episode 200. We achieved this by a gamma of .9, making the agent more forward thinking. We also chose a random action to perform 10% of the time through our .1 epsilon. Epsilon decay is 1.0, which in our configuration means no decay. This parameter was included for experimentation but it did not end up improving our performance by much and only complicated our implementation. Our learning rate is fairly high at .4, which allows our agent to learn relatively quickly. Although this leads to less stable performance, it allowed us to iterate and test our agent quickly without compromising performance too much. Our batch size is set at 32, which means we sample 32 states/actions from our q queue to examine before taking action. Our state & action space are both 7 in size. We perform analysis & calculations 10 simes per second, so our time steps are .1 second. Finally, our agent runs at double speed for faster iteration and training, so we reduce all of our time sensitive operations by a factor of 2.
 
 ![Code Snippet](assets/codesnippet.png)
+*Neural Net Configuration*
 
 The code above is used to configure our neural network for our agent. The diagram below is a visual representation of our agent’s neural network including its inputs and outputs.
 
 ![Neural Net Diagram](assets/nndiagram.png)
+*Neural Net Diagram*
 
 ![Huber Loss Function](assets/huberlossfunction.png)
+*Huber Loss Function*
 
 Our neural network utilizes the huber loss function for its loss function. We chose the Huber Loss formula because this formula would allow our neural network to be less sensitive to outliers in the data.
 
@@ -47,10 +51,13 @@ The best outcome for the agent in each scenario would be to kill the mob as quic
 The following graphs show the real-time reward for the agent’s actions during training. In general, peaks indicate successful arena-clears and troughs indicate agent deaths.
 
 ![Agent training on 1 zombie (56/61 = 92% success rate)](assets/graph1.png)
+*Agent training on 1 zombie (56/61 = 92% success rate)*
 
 ![Agent training on 2 zombies (60/92 = 65% success rate)](assets/graph2.png)
+*Agent training on 2 zombies (60/92 = 65% success rate)*
 
 ![Agent training on 3 zombies (28/73 = 38% success rate)](assets/graph3.png)
+*Agent training on 3 zombies (28/73 = 38% success rate)*
 
 **Resources Used**:
 
